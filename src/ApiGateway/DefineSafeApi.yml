@@ -10,10 +10,7 @@ Resources:
     Type: 'AWS::Lambda::Permission'
     Properties:
       Action: 'lambda:invokeFunction'
-      FunctionName:
-        'Fn::GetAtt':
-          - Test
-          - Arn
+      FunctionName: 'arn:aws:lambda:us-east-1:042537148068:function:GetPlanByUserId'
       Principal: apigateway.amazonaws.com
       SourceArn:
         'Fn::Join':
@@ -33,7 +30,6 @@ Resources:
       MethodSettings:
         - DataTraceEnabled: true
           HttpMethod: '*'
-          LoggingLevel: INFO
           ResourcePath: /*
       RestApiId:
         Ref: DefineSafeApi
@@ -41,12 +37,12 @@ Resources:
   ApiDeployment:
     Type: 'AWS::ApiGateway::Deployment'
     DependsOn:
-      - TestRequest
+      - PlanRequest
     Properties:
       RestApiId:
         Ref: DefineSafeApi
       StageName: DummyStage
-  TestResource:
+  PlanResource:
     Type: 'AWS::ApiGateway::Resource'
     Properties:
       RestApiId:
@@ -54,9 +50,9 @@ Resources:
       ParentId:
         'Fn::GetAtt':
           - DefineSafeApi
-          - RootResourceId
-      PathPart: test
-  TestRequest:
+          - ROOTRESOURCEID
+      PathPart: plan
+  PlanRequest:
     DependsOn: LambdaPermission
     Type: 'AWS::ApiGateway::Method'
     Properties:
@@ -71,9 +67,7 @@ Resources:
             - - 'arn:aws:apigateway:'
               - Ref: 'AWS::Region'
               - ':lambda:path/2015-03-31/functions/'
-              - 'Fn::GetAtt':
-                  - Test
-                  - Arn
+              - 'arn:aws:lambda:us-east-1:042537148068:function:GetPlanByUserId'
               - /invocations
         IntegrationResponses:
           - StatusCode: 200
@@ -82,12 +76,12 @@ Resources:
             'Fn::Join':
               - ''
               - - '{'
-                - '"name": "$input.params(''name'')"'
+                - '"name": "$input.params(''user_id'')"'
                 - '}'
       RequestParameters:
         method.request.querystring.name: false
       ResourceId:
-        Ref: TestResource
+        Ref: PlanResource
       RestApiId:
         Ref: DefineSafeApi
       MethodResponses:
