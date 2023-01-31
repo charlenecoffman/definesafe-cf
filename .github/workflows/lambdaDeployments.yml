@@ -59,14 +59,14 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
-      - name: Create Role and Function
+      - name: Create Function If Doesn't Exist
         if: env.ROLE == ''
         run: |
           aws lambda create-function --function-name ${{matrix.file}} --runtime "nodejs12.x" --role "arn:aws:iam::042537148068:role/AWSLambdaBasicExecutionRole-defineSafe" --handler "index.handler" --zip-file fileb://zips/${{matrix.file}}.zip --region "us-east-1"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      - name: Deploy To AWS
+      - name: Update Function If Exists
         if: env.ROLE != ''
         uses: appleboy/lambda-action@master
         with:
