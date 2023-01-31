@@ -53,6 +53,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
       - name: Check Function Existance
         run: |
           role=$(aws lambda list-functions --query 'Functions[?FunctionName == `${{matrix.file}}`].Role' --output text --region "us-east-1")
