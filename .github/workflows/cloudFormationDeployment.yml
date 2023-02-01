@@ -26,14 +26,14 @@ jobs:
       - name: Create Stack If Doesn't Exist
         if: env.Status == ''
         run: |
-          aws cloudformation create-stack --stack-name "DefineSafe-CF" --template-body "$(echo 'src/ApiGateway/DefineSafeApi.yml')"" --tags Solution=DefineSafe
+          aws cloudformation create-stack --stack-name "DefineSafe-CF" --template-body "$(echo 'src/ApiGateway/DefineSafeApi.yml')" --tags Solution=DefineSafe
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Update Function If Exists
         if: env.ROLE != ''
-        run: aws cloudformation update-stack --stack-name "DefineSafe-CF" --template-body "${{echo src/ApiGateway/DefineSafeApi.yml}}"
+        run: aws cloudformation update-stack --stack-name "DefineSafe-CF" --template-body "$(echo 'src/ApiGateway/DefineSafeApi.yml')"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
