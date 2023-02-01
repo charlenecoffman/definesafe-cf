@@ -51,9 +51,9 @@ jobs:
       - name: Setup AWS CLI
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          AWS-ACCESS-KEY-ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS-SECRET-ACCESS-KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS-REGION: us-east-1
       - name: Check Function Existance
         run: |
           role=$(aws lambda list-functions --query 'Functions[?FunctionName == `${{matrix.file}}`].Role' --output text --region "us-east-1")
@@ -74,6 +74,6 @@ jobs:
         if: env.ROLE != ''
         run: aws lambda update-function-code --function-name ${{matrix.file}} --zip-file fileb://zips/${{matrix.file}}.zip
         env:
-          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws_region: us-east-1
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: us-east-1
