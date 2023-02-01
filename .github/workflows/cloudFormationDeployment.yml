@@ -1,0 +1,40 @@
+name: CFDeployments
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Setup AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          AWS-ACCESS-KEY-ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS-SECRET-ACCESS-KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS-REGION: us-east-1
+      - name: Check Stack Existance
+        run: |
+          status=$(aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE UPDATE_COMPLETE --query "StackSummaries[?StackName==`DefineSafe-CF`] | [0].StackStatus")
+          echo "::set-env name=STATUS::$status"
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Create Stack If Doesn't Exist
+        if: env.Status == ''
+        run: |
+          aws cloudformation create-stack --stack-name "DefineSafe-CF" --template-body "${{echo src/ApiGateway/DefineSafeApi.yml}}" --tags Solution=DefineSafe
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Update Function If Exists
+        if: env.ROLE != ''
+        run: aws cloudformation update-stack --stack-name "DefineSafe-CF" --template-body "${{echo src/ApiGateway/DefineSafeApi.yml}}"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: us-east-1
