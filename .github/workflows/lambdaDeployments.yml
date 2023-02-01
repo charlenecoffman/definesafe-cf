@@ -35,11 +35,10 @@ jobs:
             f=$(echo "${i##*/}");
             filename=$(echo $f| cut  -d'.' -f 1);
             for %a in $f do set updated=%ta
-            echo "${updated}"
             matrixOutput+="{\"file\":\"${filename}\", \"lastUpdated\": \"${updated}\"},"; 
           done
           matrixOutput+="]}"
-          echo "${matrixOutput}"
+          echo "test"
           echo "::set-output name=matrix::${matrixOutput}"
   deploy:
     runs-on: ubuntu-latest
