@@ -50,7 +50,7 @@ Resources:
       ParentId:
         'Fn::GetAtt':
           - DefineSafeApi
-          - ROOTRESOURCEID
+          - RootResourceId
       PathPart: plan
   PlanRequest:
     DependsOn: LambdaPermission
