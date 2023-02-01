@@ -72,10 +72,8 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Update Function If Exists
         if: env.ROLE != ''
-        uses: appleboy/lambda-action@master
-        with:
+        run: aws lambda update-function-code --function-name ${{matrix.file}} --zip-file fileb://zips/${{matrix.file}}.zip
+        env:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_region: us-east-1
-          function_name: ${{ matrix.file }}
-          zip_file: zips/${{matrix.file}}.zip
