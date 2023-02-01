@@ -18,7 +18,7 @@ jobs:
       - name: Check Stack Existance
         run: |
           status=$(aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE UPDATE_COMPLETE --query "StackSummaries[?StackName=='DefineSafe-CF'] | [0].StackStatus")
-          echo "::set-env name=STATUS::$status"
+          echo "::set-env name=STATUS::$Status"
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
