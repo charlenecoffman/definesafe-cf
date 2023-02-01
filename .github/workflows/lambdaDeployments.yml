@@ -34,11 +34,10 @@ jobs:
           cd artifacts/zips && for i in ./*; do 
             f=$(echo "${i##*/}");
             filename=$(echo $f| cut  -d'.' -f 1);
-            for %a in $f do set updated=%ta
+            update="test"
             matrixOutput+="{\"file\":\"${filename}\", \"lastUpdated\": \"${updated}\"},"; 
           done
           matrixOutput+="]}"
-          echo "test"
           echo "::set-output name=matrix::${matrixOutput}"
   deploy:
     runs-on: ubuntu-latest
