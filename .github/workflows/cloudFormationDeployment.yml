@@ -34,7 +34,8 @@ jobs:
       - name: Add Template to S3
         if: env.STATUS != ''
         run: |
-          filename="DefineSafeApi-${date '+%d-%m-%y'}.yml"
+          timestamp=$(date '+%d-%m-%y')
+          filename="DefineSafeApi-$timestamp.yml"
           url=$(aws s3 cp src/ApiGateway/DefineSafeApi.yml s3://cf-templates-1syem7yzq6ws3-us-east-1/${filename})
           echo "::set-env name=UPLOADURL::${url}"
         env:
