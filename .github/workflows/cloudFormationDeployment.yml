@@ -44,7 +44,7 @@ jobs:
       - name: Update Stack If Exists
         if: env.STATUS != ''
         run: |
-          aws cloudformation deploy --stack-name "DefineSafe-CF" --template-file env.UPLOADURL
+          aws cloudformation deploy --stack-name "DefineSafe-CF" --template-file ${{env.UPLOADURL}}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
