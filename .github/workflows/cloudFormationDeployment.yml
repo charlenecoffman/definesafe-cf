@@ -31,18 +31,6 @@ jobs:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      - name: Add Template to S3
-        if: env.STATUS != ''
-        run: |
-          timestamp=$(date '+%Y.%m.%d-%H.%M.%S')
-          filename="DefineSafeApi-$timestamp.yml"
-          aws s3 cp src/ApiGateway/DefineSafeApi.yml s3://cf-templates-1syem7yzq6ws3-us-east-1/${filename}
-          echo "::set-env name=FILENAME::${filename}"
-        env:
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: us-east-1
       - name: Update Stack If Exists
         if: env.STATUS != ''
         run: |
