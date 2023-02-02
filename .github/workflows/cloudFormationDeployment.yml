@@ -35,7 +35,7 @@ jobs:
         if: env.STATUS != ''
         run: |
           url=$(aws s3 cp src/ApiGateway/DefineSafeApi.yml s3://cf-templates-1syem7yzq6ws3-us-east-1/)
-          echo "::set-env name=UPLOADURL::url"
+          echo "::set-env name=UPLOADURL::${url}"
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
