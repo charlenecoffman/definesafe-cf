@@ -31,11 +31,11 @@ jobs:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      - name: Update Function If Exists
+      - name: Update Stack If Exists
         if: env.STATUS != ''
         run: |
-          test=$(aws cloudformation update-stack --stack-name "DefineSafe-CF" --template-body file://src/ApiGateway/DefineSafeApi.yml  2> /dev/null)
-          echo $test
+          aws cloudformation update-stack --stack-name "DefineSafe-CF" --template-body file://src/ApiGateway/DefineSafeApi.yml  2> /dev/null
+          echo $?
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
