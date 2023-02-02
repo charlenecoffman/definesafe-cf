@@ -17,7 +17,7 @@ jobs:
           AWS-REGION: us-east-1
       - name: Check Stack Existance
         run: |
-          status=$(aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE UPDATE_COMPLETE --query "StackSummaries[?StackName=='DefineSafe-CF'] | [0].StackStatus")
+          status=$(aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE UPDATE_COMPLETE --query "StackSummaries[?StackName=='DefineSafe-CF'] | [0].StackStatus"  2> /dev/null)
           echo "::set-env name=STATUS::$status"
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
