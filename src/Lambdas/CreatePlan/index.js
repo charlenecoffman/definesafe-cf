@@ -1,15 +1,19 @@
 var aws = require('aws-sdk');
+var uuid = require('uuid');
+var documentClient = new aws.DynamoDB.DocumentClient();
 
 exports.handler = async (event, context, callback) => {
     const user_id = event["queryStringParameters"]["user_id"]
-
-
     const response ={
-        "statusCode": 200,
+        "statusCode": 201,
         "headers": {
             "Content-Type": "*/*"
-        },
-        "body": {"something": user_id}
+        }
     };
+
+    const newPlan = JSON.parse(event.body);
+
+    newPlan.Plan_Id = uuid.v1()
+    
     callback(null, response);
 }
