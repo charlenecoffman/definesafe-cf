@@ -143,12 +143,12 @@ Resources:
         Ref: DefineSafeApi
       MethodResponses:
         - StatusCode: 200
-# UpdatePlanById
+# CreatePlan
   LambdaPermissions3:
     Type: 'AWS::Lambda::Permission'
     Properties:
       Action: 'lambda:invokeFunction'
-      FunctionName: 'arn:aws:lambda:us-east-1:042537148068:function:UpdatePlanById'
+      FunctionName: 'arn:aws:lambda:us-east-1:042537148068:function:CreatePlan'
       Principal: apigateway.amazonaws.com
       SourceArn:
         'Fn::Join':
@@ -177,17 +177,10 @@ Resources:
             - - 'arn:aws:apigateway:'
               - Ref: 'AWS::Region'
               - ':lambda:path/2015-03-31/functions/'
-              - 'arn:aws:lambda:us-east-1:042537148068:function:UpdatePlanById'
+              - 'arn:aws:lambda:us-east-1:042537148068:function:CreatePlan'
               - /invocations
         IntegrationResponses:
           - StatusCode: 200
-        RequestTemplates:
-          application/json:
-            'Fn::Join':
-              - ''
-              - - '{'
-                - '"name": "$input.params(''plan_id'')"'
-                - '}'
       RequestParameters:
         method.request.querystring.name: false
       ResourceId:
