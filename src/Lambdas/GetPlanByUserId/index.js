@@ -5,10 +5,9 @@ exports.handler = async (event, context, callback) => {
 
 
     const response ={
+        "isBase64Encoded": false,
         "statusCode": 200,
-        "headers": {
-            "Content-Type": "*/*"
-        },
+        "headers": { "Content-Type": "*/*" },
         "body": {"something": user_id}
     };
     callback(null, response);
