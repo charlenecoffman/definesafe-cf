@@ -10,7 +10,7 @@ exports.handler = async (event, context, callback) => {
         }
     };
 
-    const newPlan = JSON.parse(event.body);
+    const newPlan = event.body;
 
     newPlan.Plan_Id = uuid.v1();
     response.body = newPlan;
