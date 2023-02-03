@@ -34,7 +34,7 @@ jobs:
           cd artifacts/zips && for i in ./*; do 
             f=$(echo "${i##*/}");
             filename=$(echo $f| cut  -d'.' -f 1);
-            for %A in $i do @ECHO=%~tA
+            for %A in $i do @ECHO=%~tA done
             matrixOutput+="{\"file\":\"${filename}\", \"lastUpdated\": \"${updated}\"},"; 
           done
           matrixOutput+="]}"
