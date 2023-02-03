@@ -7,7 +7,7 @@ on:
       - completed
 
 jobs:
-  deploy-cf-template:
+  deploy-api-cf-template:
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout Code
@@ -20,7 +20,25 @@ jobs:
           AWS-REGION: us-east-1
       - name: Deploy Stack
         run: |
-          aws cloudformation deploy --stack-name "DefineSafe-CF" --template-file src/ApiGateway/DefineSafeApi.yml --no-fail-on-empty-changeset --tags Solution=DefineSafe
+          aws cloudformation deploy --stack-name "DefineSafeApi-CF" --template-file src/ApiGateway/DefineSafeApi.yml --no-fail-on-empty-changeset --tags Solution=DefineSafe
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: us-east-1
+  deploy-tables-cf-template:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Setup AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          AWS-ACCESS-KEY-ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS-SECRET-ACCESS-KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS-REGION: us-east-1
+      - name: Deploy Stack
+        run: |
+          aws cloudformation deploy --stack-name "DefineSafeTables-CF" --template-file src/Tables/DefineSafeTables.yml --no-fail-on-empty-changeset --tags Solution=DefineSafe
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
