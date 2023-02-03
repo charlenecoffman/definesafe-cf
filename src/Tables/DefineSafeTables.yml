@@ -1,29 +1,32 @@
-Type: AWS::DynamoDB::Table
-Properties: 
-  AttributeDefinitions: 
-    - 
-      AttributeName: "Plan_Id"
-      AttributeType: "S"
-    - 
-      AttributeName: "User_Id"
-      AttributeType: "S"
-    - 
-      AttributeName: "Plan_Date"
-      AttributeType: "S"
-    - 
-      AttributeName: "Triggers"
-      AttributeType: "S"
-    - 
-      AttributeName: "Coping_Skills"
-      AttributeType: "S"
-  KeySchema: 
-    - 
-      AttributeName: "Plan_Id"
-      KeyType: "HASH"
-  ProvisionedThroughput: 
-    ReadCapacityUnits: "5"
-    WriteCapacityUnits: "5"
-  TableName: "Plans"
-  Tags:
-    - Key: Solution
-      Value: DefineSafe
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  DefineSafeTables:
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      AttributeDefinitions: 
+        - 
+          AttributeName: "Plan_Id"
+          AttributeType: "S"
+        - 
+          AttributeName: "User_Id"
+          AttributeType: "S"
+        - 
+          AttributeName: "Plan_Date"
+          AttributeType: "S"
+        - 
+          AttributeName: "Triggers"
+          AttributeType: "S"
+        - 
+          AttributeName: "Coping_Skills"
+          AttributeType: "S"
+      KeySchema: 
+        - 
+          AttributeName: "Plan_Id"
+          KeyType: "HASH"
+      ProvisionedThroughput: 
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+      TableName: "Plans"
+      Tags:
+        - Key: Solution
+          Value: DefineSafe
