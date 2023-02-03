@@ -32,6 +32,6 @@ exports.handler = async (event, context, callback) => {
         }
       });
 
-    response.body = newPlan;
+    response.body = JSON.stringify(newPlan);
     callback(null, response);
 }
