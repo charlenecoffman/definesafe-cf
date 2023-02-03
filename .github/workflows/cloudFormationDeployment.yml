@@ -1,7 +1,10 @@
 name: CFDeployments
 on:
-  push:
+  workflow_run:
+    workflows: ["LambdaDeployments"]
     branches: [main]
+    types: 
+      - completed
 
 jobs:
   deploy-cf-template:
