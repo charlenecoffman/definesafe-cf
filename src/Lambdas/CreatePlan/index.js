@@ -13,6 +13,25 @@ exports.handler = async (event, context, callback) => {
     const newPlan = event.body;
 
     newPlan.Plan_Id = uuid.v1();
+
+    var params = {
+        TableName: 'TABLE',
+        Item: {
+          'Plan_Id': newPlan.Plan_Id,
+          'User_Id': newPlan.User_Id,
+          "Coping_Skills": newPlan.Coping_Skills,
+          "Triggers": newPlan.Triggers
+        }
+      };
+      
+      docClient.put(params, function(err, data) {
+        if (err) {
+          console.log("Error", err);
+        } else {
+          console.log("Success", data);
+        }
+      });
+
     response.body = newPlan;
     callback(null, response);
 }
