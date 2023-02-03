@@ -24,7 +24,7 @@ exports.handler = async (event, context, callback) => {
         }
       };
       
-      docClient.put(params, function(err, data) {
+      documentClient.put(params, function(err, data) {
         if (err) {
           console.log("Error", err);
         } else {
