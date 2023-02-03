@@ -17,7 +17,7 @@ jobs:
           AWS-REGION: us-east-1
       - name: Deploy Stack
         run: |
-          aws cloudformation deploy --stack-name "DefineSafe-CF" --template-file src/ApiGateway/DefineSafeApi.yml --no-fail-on-empty-changeset --tags Key=Solution,Value=DefineSafe
+          aws cloudformation deploy --stack-name "DefineSafe-CF" --template-file src/ApiGateway/DefineSafeApi.yml --no-fail-on-empty-changeset --tags Solution=DefineSafe
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
