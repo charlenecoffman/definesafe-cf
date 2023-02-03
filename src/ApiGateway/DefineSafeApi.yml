@@ -109,7 +109,7 @@ Resources:
             - /*
   PlanRequest2:
     DependsOn: 
-      - LambdaPermission
+      - LambdaPermission2
       - PlanResource
     Type: 'AWS::ApiGateway::Method'
     Properties:
