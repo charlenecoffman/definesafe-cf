@@ -74,9 +74,10 @@ jobs:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      - name: Get Last Modified Dates
+      - name: Checkout Code
         if: env.ROLE != ''
         uses: actions/checkout@v2
+      - name: Get Last Modified Dates
         run: |
           echo $(ls)
           fileLastModifiedDate=$(date -r `src/Lambdas/${{matrix.file}}/index.js`)
