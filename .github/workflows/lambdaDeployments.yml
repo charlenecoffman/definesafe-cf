@@ -81,13 +81,15 @@ jobs:
         run: |
           fileLastModifiedDate=$(date -r src/Lambdas/${{matrix.file}}/index.js)
           lambdaLastModifiedDate=$(aws lambda get-function --function-name ${{matrix.file}} --query 'Configuration.LastModified')
-          if [$lambdaLastModifiedDate -ge $fileLastModifiedDate];
-          then
-            echo "::set-env name=UPDATE::'true'"
-          else
-            echo "::set-env name=UPDATE::'false"
-          fi
-          echo `${{env.UPDATE}}`
+          # if [$lambdaLastModifiedDate -ge $fileLastModifiedDate];
+          # then
+          #   echo "::set-env name=UPDATE::'true'"
+          # else
+          #   echo "::set-env name=UPDATE::'false"
+          # fi
+          # echo `${{env.UPDATE}}`
+          echo $fileLastModifiedDate
+          echo $lambdaLastModifiedDate
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
