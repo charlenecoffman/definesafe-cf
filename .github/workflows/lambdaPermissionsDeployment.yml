@@ -1,4 +1,4 @@
-name: CFDeployments
+name: PermissionsDeployment
 on:
   workflow_run:
     workflows: ["LambdaDeployments"]
@@ -7,7 +7,7 @@ on:
       - completed
 
 jobs:
-  addPermissions:
+  addPermissionsToCreatePlan:
     runs-on: ubuntu-18.04
     steps:
       - name: Setup AWS CLI
