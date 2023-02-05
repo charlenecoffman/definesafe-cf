@@ -81,6 +81,7 @@ jobs:
         run: |
           fileLastModifiedDate=$(date -r src/Lambdas/${{matrix.file}}/index.js)
           lambdaLastModifiedDate=$(aws lambda get-function --function-name ${{matrix.file}}).Configuration.LastModified
+          echo $fileLastModifiedDate > $lambdaLastModifiedDate
           echo "::set-env name=FILE_LMD::$fileLastModifiedDate"
           echo "::set-env name=LAMB_LMD::$lambdaLastModifiedDate"
         env:
