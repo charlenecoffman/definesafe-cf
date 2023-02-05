@@ -1,7 +1,7 @@
 name: PermissionsDeployment
 on:
   workflow_run:
-    workflows: ["LambdaDeployments"]
+    workflows: ["CFDeployments"]
     branches: [main]
     types: 
       - completed
