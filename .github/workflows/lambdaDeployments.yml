@@ -80,10 +80,12 @@ jobs:
       - name: Get Last Modified Dates
         run: |
           fileLastModifiedDate=$(date -r src/Lambdas/${{matrix.file}}/index.js)
-          lambdaLastModifiedDate=$(aws lambda get-function --function-name ${{matrix.file}}).Configuration.LastModified
+          lambdaLastModifiedDate=$(aws lambda get-function --function-name ${{matrix.file}} --query 'Configuration.LastModified')
           if [$lambdaLastModifiedDate -ge fileLastModifiedDate];
           then
-            echo "::set-env name=ROLE::'true'"
+            echo "::set-env name=UPDATE::'true'"
+          else
+            echo "::set-env name=UPDATE::'false"
           fi
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
