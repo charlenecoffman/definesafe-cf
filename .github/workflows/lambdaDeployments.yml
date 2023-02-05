@@ -79,8 +79,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Get Last Modified Dates
         run: |
-          echo $(ls)
-          fileLastModifiedDate=$(date -r `src/Lambdas/${{matrix.file}}/index.js`)
+          fileLastModifiedDate=$(stat `src/Lambdas/${{matrix.file}}/index.js`).Modify
           lambdaLastModifiedDate=$(aws get-function --function-name ${{matrix.file}}).Configuration.LastModified
           echo "::set-env name=FILE_LMD::$fileLastModifiedDate"
           echo "::set-env name=LAMB_LMD::$lambdaLastModifiedDate"
