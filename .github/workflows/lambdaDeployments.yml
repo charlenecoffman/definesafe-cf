@@ -91,7 +91,7 @@ jobs:
           echo $fileLastModifiedDate
           lambdaLastModifiedDate="${lambdaLastModifiedDate/T/ }"
           lambdaLastModifiedDate="${lambdaLastModifiedDate/+0000/}"
-          echo $(date -d ${lambdaLastModifiedDate} "+%Y-%m-%d %H:%M:%S")
+          echo $(date -d "${lambdaLastModifiedDate}" "+%Y-%m-%d %H:%M:%S")
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
