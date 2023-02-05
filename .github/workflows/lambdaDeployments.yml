@@ -89,7 +89,8 @@ jobs:
           # fi
           # echo `${{env.UPDATE}}`
           echo $fileLastModifiedDate
-          echo "${lambdaLastModifiedDate/T/ }"
+          lambdaLastModifiedDate="${lambdaLastModifiedDate/T/ }"
+          echo ${lambdaLastModifiedDate/+0000/}
           # echo $(date -d "${lambdaLastModifiedDate/T/ }" "+%Y-%m-%d %H:%M:%S")
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
