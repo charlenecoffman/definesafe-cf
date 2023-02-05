@@ -89,7 +89,8 @@ jobs:
           # fi
           # echo `${{env.UPDATE}}`
           echo $fileLastModifiedDate
-          echo $(date -d "${lambdaLastModifiedDate/T/ }" "+%Y-%m-%d %H:%M:%S")
+          echo "${lambdaLastModifiedDate/T/ }"
+          # echo $(date -d "${lambdaLastModifiedDate/T/ }" "+%Y-%m-%d %H:%M:%S")
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
