@@ -62,10 +62,14 @@ jobs:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      - name: Create Function If Doesn't Exist
+      - name: Create Role & Function If Doesn't Exist
         if: env.ROLE == ''
         run: |
-          aws lambda create-function --function-name ${{matrix.file}} --runtime "nodejs12.x" --role "arn:aws:iam::042537148068:role/AWSLambdaBasicExecutionRole-defineSafe" --handler "index.handler" --zip-file fileb://zips/${{matrix.file}}.zip --region "us-east-1" --tags Solution=DefineSafe
+          echo "{\"Version\": \"2012-10-17\",\"Statement\": [{\"Effect\": \"Allow\", \"Action\": \"sts:AssumeRole\", \"Principal\": {\"Service\": \"lambda.amazonaws.com\"}}]}" > policyJson.json
+          role=$(aws iam create-role --role-name "AWSLambdaBasicExecutionRole-${{ matrix.file }}" --assume-role-policy-document file://policyJson.json --region "us-east-1");
+          echo $role > returnObject.json
+          sleep 10s
+          aws lambda create-function --function-name ${{matrix.file}} --runtime "nodejs12.x" --role "$(jq -r '.Role.Arn' returnObject.json)" --handler "index.handler" --zip-file fileb://zips/${{matrix.file}}.zip --region "us-east-1" --tags Solution=DefineSafe
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
