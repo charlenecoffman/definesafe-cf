@@ -17,11 +17,19 @@ jobs:
           AWS-SECRET-ACCESS-KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS-REGION: us-east-1
       - name: Check Policy Existance
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           policy=$(aws iam list-policies --query 'Policies[?PolicyName == "CreatePlanPermissions"].Role' --output text --region "us-east-1")
           echo "::set-env name=POLICY::$policy"
       - name: Create Plan Permissions If Does Not Exist
         if: env.POLICY == ''
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           echo "{\"Version\": \"2012-10-17\",\"Statement\": [{\"Effect\": \"Allow\", \"Action\": \"sts:AssumeRole\", \"Principal\": {\"Service\": \"lambda.amazonaws.com\"}}]}" > policyJson.json
           policy=$(aws iam create-policy --policy-name "CreatePlanPermissions" --policy-document file://policyJson.json --tags Key=Solution,Value=DefineSafe)
