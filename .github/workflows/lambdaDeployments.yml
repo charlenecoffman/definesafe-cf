@@ -81,15 +81,16 @@ jobs:
         run: |
           fileLastModifiedDate=$(date -r src/Lambdas/${{matrix.file}}/index.js)
           lambdaLastModifiedDate=$(aws lambda get-function --function-name ${{matrix.file}}).Configuration.LastModified
-          echo $(fileLastModifiedDate > lambdaLastModifiedDate)
-          echo "::set-env name=FILE_LMD::$fileLastModifiedDate"
-          echo "::set-env name=LAMB_LMD::$lambdaLastModifiedDate"
+          if [$lambdaLastModifiedDate -ge fileLastModifiedDate];
+          then
+            echo "::set-env name=ROLE::'true'"
+          fi
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Update Function If Exists
-        if: env.ROLE != '' && env.FILE_LMD > env.LAMB_LMD
+        if: env.UPDATE == 'true'
         run: aws lambda update-function-code --function-name ${{matrix.file}} --zip-file fileb://zips/${{matrix.file}}.zip
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
