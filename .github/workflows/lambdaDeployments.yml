@@ -74,8 +74,19 @@ jobs:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      - name: Update Function If Exists
+      - name: Check to see if function needs updating
         if: env.ROLE != ''
+        run: |
+          fileLastModifiedDate=$(date -r `src/Lambdas/${{matrix.file}}`)
+          lambdaLastModifiedDate=$(aws get-function --function-name ${{matrix.file}}).Configuration.LastModified
+          echo "::set-env name=FILE_LMD::$fileLastModifiedDate"
+          echo "::set-env name=LAMB_LMD::$lambdaLastModifiedDate"
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Update Function If Exists
+        if: env.ROLE != '' && env.FILE_LMD > env.LAMB_LMD
         run: aws lambda update-function-code --function-name ${{matrix.file}} --zip-file fileb://zips/${{matrix.file}}.zip
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
