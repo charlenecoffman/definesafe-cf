@@ -93,7 +93,7 @@ jobs:
           # lambdaLastModifiedDate="${lambdaLastModifiedDate/T/ +}"
           lambdaLastModifiedDate="${lambdaLastModifiedDate/.000+0000/}"
           echo $lambdaLastModifiedDate
-          lambdaLastModifiedDate=$(date -d ${lambdaLastModifiedDate})
+          lambdaLastModifiedDate=$(date -d "$lambdaLastModifiedDate")
           echo $lambdaLastModifiedDate
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
