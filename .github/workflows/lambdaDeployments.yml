@@ -13,10 +13,9 @@ jobs:
         id: zipfunctions
         run: |
           cd src/Lambdas
-
           for i in */
           do
-            fileLastModifiedDate=$(date -r index.js +%s)
+            fileLastModifiedDate=$(date -r $i/index.js +%s)
             lambdaLastModifiedDate=$(aws lambda get-function --function-name $i --query 'Configuration.LastModified' > /dev/null 2>&1)
 
             if [ 0 -eq $? ]; then
