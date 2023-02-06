@@ -82,19 +82,10 @@ jobs:
           echo $(bash --version)
           fileLastModifiedDate=$(date -r src/Lambdas/${{matrix.file}}/index.js)
           lambdaLastModifiedDate=$(aws lambda get-function --function-name ${{matrix.file}} --query 'Configuration.LastModified')
-          # if [$lambdaLastModifiedDate -ge $fileLastModifiedDate];
-          # then
-          #   echo "::set-env name=UPDATE::'true'"
-          # else
-          #   echo "::set-env name=UPDATE::'false"
-          # fi
-          # echo `${{env.UPDATE}}`
           echo $fileLastModifiedDate          
           lambdaLastModifiedDate="${lambdaLastModifiedDate//\"/}"
-          lambdaLastModifiedDate="${lambdaLastModifiedDate//-//}"
-          # lambdaLastModifiedDate="${lambdaLastModifiedDate/T/ +}"
-          lambdaLastModifiedDate="${lambdaLastModifiedDate/.000+0000/}"
-          echo $lambdaLastModifiedDate
+          #lambdaLastModifiedDate="${lambdaLastModifiedDate//-//}"
+          #lambdaLastModifiedDate="${lambdaLastModifiedDate/.000+0000/}"
           lambdaLastModifiedDate=$(date -d "$lambdaLastModifiedDate")
           echo $lambdaLastModifiedDate
         env:
