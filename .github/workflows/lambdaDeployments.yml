@@ -48,6 +48,8 @@ jobs:
                 then
                   (cd "$i"; zip -r "../${i%/}.zip" .)
                 fi
+              else
+                (cd "$i"; zip -r "../${i%/}.zip" .)
               fi
             fi
           done
