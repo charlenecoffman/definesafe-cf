@@ -90,7 +90,7 @@ jobs:
           # echo `${{env.UPDATE}}`
           echo $fileLastModifiedDate
           lambdaLastModifiedDate="${lambdaLastModifiedDate//-//}"
-          lambdaLastModifiedDate="${lambdaLastModifiedDate/T/ +}"
+          # lambdaLastModifiedDate="${lambdaLastModifiedDate/T/ +}"
           lambdaLastModifiedDate="${lambdaLastModifiedDate/.000+0000/}"
           echo $lambdaLastModifiedDate
           lambdaLastModifiedDate=$(date -d ${lambdaLastModifiedDate})
