@@ -32,7 +32,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           echo src/Permissions/CreatePlanPermissions.json > policyJson.json
-          echo "${file://policyJson.json}"
+          echo "${policyJson.json}"
           policy=$(aws iam create-policy --policy-name "CreatePlanPermissions" --policy-document file://policyJson.json --tags Key=Solution,Value=DefineSafe)
           echo $policy > returnObject.json
           sleep 10s
