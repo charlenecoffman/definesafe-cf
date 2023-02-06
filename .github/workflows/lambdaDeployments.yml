@@ -30,7 +30,7 @@ jobs:
 
             lambdaLastModifiedDate=$(aws lambda list-functions --query "Functions[?FunctionName == '${i%/}'].LastModified" --output text --region "us-east-1")
             echo "here it comes!"
-            echo "${lambdaLastModifiedDate}"
+            echo $lambdaLastModifiedDate
             echo "^^ there it is"
 
             if [[ $lambdaLastModifiedDate -ne "[]" ]]
@@ -41,7 +41,7 @@ jobs:
               lamMod=$(($lambdaLastModifiedDate % 600))
               lamDiff=$((600 - $lamMod))
               lambdaLastModifiedDate=$(($lamDiff + $lambdaLastModifiedDate))
-
+              echo "Got here"
               # if file last modified is after last lambda update, then add zip to matrix
               if [[ $fileLastModifiedDate -gt $lambdaLastModifiedDate ]]
               then
