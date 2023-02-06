@@ -29,7 +29,8 @@ jobs:
             fileLastModifiedDate=$(($fileDiff + $fileLastModifiedDate))
 
             lambdaLastModifiedDate=$(aws lambda list-functions --query 'Functions[?FunctionName == `${i%/}`].LastModified' --output text --region "us-east-1")
-            if [[ $lambdaLastModifiedDate -ne '' ]]; then
+            if [[ $lambdaLastModifiedDate -ne "" ]]
+            then
               lambdaLastModifiedDate="${lambdaLastModifiedDate//\"/}"
               lambdaLastModifiedDate=$(date -d "$lambdaLastModifiedDate" +%s)
 
