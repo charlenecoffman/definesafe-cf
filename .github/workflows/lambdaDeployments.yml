@@ -83,7 +83,11 @@ jobs:
           lambdaLastModifiedDate=$(aws lambda get-function --function-name ${{matrix.file}} --query 'Configuration.LastModified')       
           lambdaLastModifiedDate="${lambdaLastModifiedDate//\"/}"
           lambdaLastModifiedDate=$(date -d "$lambdaLastModifiedDate")
-          shouldupdate=[[$fileLastModifiedDate -ge $lambdaLastModifiedDate]]
+          fileDateNumber=$(date -d fileLastModifiedDate +%s)
+          lambdaDateNumber=$(date -d lambdaLastModifiedDate +%s)
+          echo $fileDateNumber
+          echo $lambdaDateNumber
+          shouldupdate=((fileDateNumber > lambdaDateNumber))
           echo "::set-env name=UPDATE::$shouldupdate"
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
