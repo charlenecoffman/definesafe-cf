@@ -16,8 +16,7 @@ jobs:
           for i in */
           do
             fileLastModifiedDate=$(date -r $i/index.js +%s)
-            echo "Test"
-            lambdaLastModifiedDate=$(aws lambda get-function --function-name $i --query 'Configuration.LastModified' > /dev/null 2>&1)
+            lambdaLastModifiedDate=$(aws lambda get-function --function-name $i --query 'Configuration.LastModified') > /dev/null 2>&1
             if [ 0 -eq $? ]; then
               lambdaLastModifiedDate="${lambdaLastModifiedDate//\"/}"
               lambdaLastModifiedDate=$(date -d "$lambdaLastModifiedDate" +%s)
