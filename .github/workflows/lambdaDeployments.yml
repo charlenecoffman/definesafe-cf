@@ -85,7 +85,7 @@ jobs:
           lambdaLastModifiedDate="${lambdaLastModifiedDate//\"/}"
           lambdaLastModifiedDate=$(date -d "$lambdaLastModifiedDate" +%s)
           # set env variable
-          if [[ $fileLastModifiedDate -ge $lambdaLastModifiedDate ]]
+          if [[ $fileLastModifiedDate -gt $lambdaLastModifiedDate ]]
           then
             echo "::set-env name=UPDATE::$(true)"
           fi
