@@ -81,10 +81,8 @@ jobs:
         run: |
           fileLastModifiedDate=$(date -r src/Lambdas/${{matrix.file}}/index.js +%s)
           lambdaLastModifiedDate=$(aws lambda get-function --function-name ${{matrix.file}} --query 'Configuration.LastModified')
-          # Over write date to format
           lambdaLastModifiedDate="${lambdaLastModifiedDate//\"/}"
           lambdaLastModifiedDate=$(date -d "$lambdaLastModifiedDate" +%s)
-          # set env variable
           if [[ $fileLastModifiedDate -gt $lambdaLastModifiedDate ]]
           then
             echo "::set-env name=UPDATE::$(true)"
