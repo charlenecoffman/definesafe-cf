@@ -70,17 +70,20 @@ jobs:
         with:
           path: artifacts
       - name: Json Matrix Output
-        if: -d "artifacts/zips"
         id: jsonMatrixOutput
         run: |
-          matrixOutput="{\"include\":["
-          cd artifacts/zips && for i in ./*; do
-            f=$(echo "${i##*/}");
-            filename=$(echo $f| cut  -d'.' -f 1);
-            matrixOutput+="{\"file\":\"${filename}\"},";
-          done
-          matrixOutput+="]}"
-          echo "::set-output name=matrix::${matrixOutput}"
+          if [-d artifacts/zip] then
+            matrixOutput="{\"include\":["
+            cd artifacts/zips && for i in ./*; do
+              f=$(echo "${i##*/}");
+              filename=$(echo $f| cut  -d'.' -f 1);
+              matrixOutput+="{\"file\":\"${filename}\"},";
+            done
+            matrixOutput+="]}"
+            echo "::set-output name=matrix::${matrixOutput}"
+          else
+            matrixOuput=''
+          fi
   deploy:
     runs-on: ubuntu-latest
     needs: createMatrix    
