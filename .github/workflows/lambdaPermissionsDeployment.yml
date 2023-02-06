@@ -1,10 +1,10 @@
 name: PermissionsDeployment
 on:
   workflow_run:
-    workflows: ["CFDeployments"]
-    branches: [main]
-    types: 
-      - completed
+    # workflows: ["CFDeployments"]
+    # branches: [main]
+    # types: 
+    #   - completed
 
 jobs:
   addPermissionsToCreatePlan:
