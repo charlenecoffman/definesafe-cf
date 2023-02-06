@@ -91,7 +91,7 @@ jobs:
           echo $fileLastModifiedDate
           lambdaLastModifiedDate="${lambdaLastModifiedDate/T/ }"
           lambdaLastModifiedDate="${lambdaLastModifiedDate/.000+0000/}"
-          lambdaLastModifiedDate=$(date -d "${lambdaLastModifiedDate}")
+          lambdaLastModifiedDate=$(date -d ${lambdaLastModifiedDate})
           echo $lambdaLastModifiedDate
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
