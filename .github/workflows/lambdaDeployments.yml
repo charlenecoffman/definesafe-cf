@@ -26,8 +26,8 @@ jobs:
             if [ 0 -eq $? ]; then
               lambdaLastModifiedDate="${lambdaLastModifiedDate//\"/}"
               lambdaLastModifiedDate=$(date -d "$lambdaLastModifiedDate" +%s)
-              echo $(lambdaLastModifiedDate - 500)
-              echo $(fileLastModifiedDate - 500)
+              echo $(lambdaLastModifiedDate)
+              echo $(fileLastModifiedDate)
               if [[ $fileLastModifiedDate -gt $lambdaLastModifiedDate ]]
               then
                 (cd "$i"; zip -r "../${i%/}.zip" .)
