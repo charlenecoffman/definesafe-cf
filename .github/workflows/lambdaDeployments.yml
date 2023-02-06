@@ -76,7 +76,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: createMatrix    
-    if: ${{needs.createMatrix.outputs.matrix != '{\"include\":[]}'}}
+    if: ${{needs.createMatrix.outputs.matrix != ''}}
     strategy:
       matrix: ${{fromJson(needs.createMatrix.outputs.matrix)}}
     steps:
