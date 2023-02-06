@@ -79,15 +79,13 @@ jobs:
         uses: actions/checkout@v2
       - name: Get Last Modified Dates
         run: |
-          fileLastModifiedDate=$(date -r src/Lambdas/${{matrix.file}}/index.js)
-          lambdaLastModifiedDate=$(aws lambda get-function --function-name ${{matrix.file}} --query 'Configuration.LastModified')       
+          fileLastModifiedDate=$(date -r src/Lambdas/${{matrix.file}}/index.js +%s)
+          lambdaLastModifiedDate=$(aws lambda get-function --function-name ${{matrix.file}} --query 'Configuration.LastModified')
+          # Over write date to format
           lambdaLastModifiedDate="${lambdaLastModifiedDate//\"/}"
-          lambdaLastModifiedDate=$(date -d "$lambdaLastModifiedDate")
-          fileDateNumber=$(date -d fileLastModifiedDate +%s)
-          lambdaDateNumber=$(date -d lambdaLastModifiedDate +%s)
-          echo $fileDateNumber
-          echo $lambdaDateNumber
-          shouldupdate=((fileDateNumber > lambdaDateNumber))
+          lambdaLastModifiedDate=$(date -d "$lambdaLastModifiedDate" +%s)
+          # set env variable
+          shouldupdate=(( $fileLastModifiedDate > $lambdaLastModifiedDate))
           echo "::set-env name=UPDATE::$shouldupdate"
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
