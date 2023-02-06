@@ -34,7 +34,14 @@ jobs:
           cd artifacts/zips && for i in ./*; do 
             f=$(echo "${i##*/}");
             filename=$(echo $f| cut  -d'.' -f 1);
-            matrixOutput+="{\"file\":\"${filename}\"},"; 
+            fileLastModifiedDate=$(date -r src/Lambdas/$filename/index.js +%s)
+            lambdaLastModifiedDate=$(aws lambda get-function --function-name $filename --query 'Configuration.LastModified')
+            lambdaLastModifiedDate="${lambdaLastModifiedDate//\"/}"
+            lambdaLastModifiedDate=$(date -d "$lambdaLastModifiedDate" +%s)
+            if [[ $fileLastModifiedDate -gt $lambdaLastModifiedDate ]]
+            then
+              matrixOutput+="{\"file\":\"${filename}\"},";
+            fi
           done
           matrixOutput+="]}"
           echo "::set-output name=matrix::${matrixOutput}"
@@ -74,32 +81,10 @@ jobs:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      - name: Checkout Code
-        if: env.ROLE != ''
-        uses: actions/checkout@v2
-      - name: Get Last Modified Dates
-        run: |
-          fileLastModifiedDate=$(date -r src/Lambdas/${{matrix.file}}/index.js +%s)
-          lambdaLastModifiedDate=$(aws lambda get-function --function-name ${{matrix.file}} --query 'Configuration.LastModified')
-          lambdaLastModifiedDate="${lambdaLastModifiedDate//\"/}"
-          lambdaLastModifiedDate=$(date -d "$lambdaLastModifiedDate" +%s)
-          if [[ $fileLastModifiedDate -gt $lambdaLastModifiedDate ]]
-          then
-            echo "::set-env name=UPDATE::$(true)"
-          else
-            echo "::set-env name=UPDATE::$(false)"
-          fi
-        env:
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Update Function If Exists
-        if: env.UPDATE == true
+        if: env.ROLE != ''
         run: aws lambda update-function-code --function-name ${{matrix.file}} --zip-file fileb://zips/${{matrix.file}}.zip
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: us-east-1
-      - name: If function doesn't need updating, then do nothing
-        if: env.UPDATE == false
-        run: echo "Nothing needed"
