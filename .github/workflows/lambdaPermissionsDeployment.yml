@@ -27,7 +27,7 @@ jobs:
           done
           matrixOutput+="]}"
           echo "::set-output name=matrix::${matrixOutput}"
-  addPermissionsToCreatePlan:
+  addPermissions:
     runs-on: ubuntu-18.04
     needs: createMatrix
     if: ${{needs.createMatrix.outputs.matrix != '' && fromJson(needs.createMatrix.outputs.matrix) != '[]'}}
