@@ -21,28 +21,33 @@ jobs:
           cd src/Lambdas
           for i in */
           do
-            curl --version
-            fileLastModifiedDate=$(curl -s "https://api.github.com/repos/charlenecoffman/definesafe-cf/commits?path=src/Lambdas/$i/index.js&page=1&per_page=1" | jq -r '.[0].commit.committer.date')
-            echo $fileLastModifiedDate
-            lambdaLastModifiedDate=$(aws lambda get-function --function-name ${i%/} --query 'Configuration.LastModified') > /dev/null 2>&1
+            fileLastModifiedDate=$(curl -s "https://api.github.com/repos/charlenecoffman/definesafe-cf/commits?path=src/Lambdas/$i/index.js&page=1&per_page=1" | jq -r '.[0].commit.committer.date') > /dev/null 2>&1
             if [ 0 -eq $? ]; then
-              lambdaLastModifiedDate="${lambdaLastModifiedDate//\"/}"
-              lambdaLastModifiedDate=$(date -d "$lambdaLastModifiedDate" +%s)
-              # round up to next ten minutes
-              lamMod=$(($lambdaLastModifiedDate % 600))
-              lamDiff=$((600 - $lamMod))
-              lambdaLastModifiedDate=$(($lamDiff + $lambdaLastModifiedDate))
+              fileLastModifiedDate=$(date -d "$fileLastModifiedDate" +%s)
+
               # round up to next ten minutes
               fileMod=$(($fileLastModifiedDate % 600))
               fileDiff=$((600 - $fileMod))
               fileLastModifiedDate=$(($fileDiff + $fileLastModifiedDate))
-              # echo that shiz
-              echo $fileLastModifiedDate
-              echo $lambdaLastModifiedDate
-              # if file last modified is after last lambda update, then add zip to matrix
-              if [[ $fileLastModifiedDate -gt $lambdaLastModifiedDate ]]
-              then
-                (cd "$i"; zip -r "../${i%/}.zip" .)
+
+              lambdaLastModifiedDate=$(aws lambda get-function --function-name ${i%/} --query 'Configuration.LastModified') > /dev/null 2>&1
+              if [ 0 -eq $? ]; then
+                lambdaLastModifiedDate="${lambdaLastModifiedDate//\"/}"
+                lambdaLastModifiedDate=$(date -d "$lambdaLastModifiedDate" +%s)
+
+                lamMod=$(($lambdaLastModifiedDate % 600))
+                lamDiff=$((600 - $lamMod))
+                lambdaLastModifiedDate=$(($lamDiff + $lambdaLastModifiedDate))
+
+                # echo that shiz
+                echo $fileLastModifiedDate
+                echo $lambdaLastModifiedDate
+                
+                # if file last modified is after last lambda update, then add zip to matrix
+                if [[ $fileLastModifiedDate -gt $lambdaLastModifiedDate ]]
+                then
+                  (cd "$i"; zip -r "../${i%/}.zip" .)
+                fi
               fi
             fi
           done
