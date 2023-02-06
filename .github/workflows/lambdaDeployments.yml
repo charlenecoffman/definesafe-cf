@@ -79,7 +79,6 @@ jobs:
         uses: actions/checkout@v2
       - name: Get Last Modified Dates
         run: |
-          echo $(bash --version)
           fileLastModifiedDate=$(date -r src/Lambdas/${{matrix.file}}/index.js)
           lambdaLastModifiedDate=$(aws lambda get-function --function-name ${{matrix.file}} --query 'Configuration.LastModified')
           echo $fileLastModifiedDate          
@@ -88,6 +87,7 @@ jobs:
           #lambdaLastModifiedDate="${lambdaLastModifiedDate/.000+0000/}"
           lambdaLastModifiedDate=$(date -d "$lambdaLastModifiedDate")
           echo $lambdaLastModifiedDate
+          echo $(git log -1 --pretty:"format:%ci" /charlenecoffman/definesafe-cf/src/Lambdas/${{matrix.file}}/index.js)
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
