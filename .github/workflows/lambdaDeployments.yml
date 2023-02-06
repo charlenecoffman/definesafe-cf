@@ -79,6 +79,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Get Last Modified Dates
         run: |
+          echo $(bash --version)
           fileLastModifiedDate=$(date -r src/Lambdas/${{matrix.file}}/index.js)
           lambdaLastModifiedDate=$(aws lambda get-function --function-name ${{matrix.file}} --query 'Configuration.LastModified')
           # if [$lambdaLastModifiedDate -ge $fileLastModifiedDate];
