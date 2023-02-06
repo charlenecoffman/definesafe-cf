@@ -11,7 +11,23 @@ jobs:
         uses: actions/checkout@v2
       - name: Zip up each function
         id: zipfunctions
-        run: cd src/Lambdas && for i in */; do (cd "$i"; zip -r "../${i%/}.zip" .); done
+        run: |
+          cd src/Lambdas
+
+          for i in */
+          do
+            fileLastModifiedDate=$(date -r index.js +%s)
+            lambdaLastModifiedDate=$(aws lambda get-function --function-name $i --query 'Configuration.LastModified' > /dev/null 2>&1)
+
+            if [ 0 -eq $? ]; then
+              lambdaLastModifiedDate="${lambdaLastModifiedDate//\"/}"
+              lambdaLastModifiedDate=$(date -d "$lambdaLastModifiedDate" +%s)
+              if [[ $fileLastModifiedDate -gt $lambdaLastModifiedDate ]]
+              then
+                (cd "$i"; zip -r "../${i%/}.zip" .)
+              fi
+            fi
+          done
       - name: Upload Zips to artifact container
         uses: actions/upload-artifact@master
         with:
@@ -31,17 +47,10 @@ jobs:
         id: jsonMatrixOutput
         run: |
           matrixOutput="{\"include\":["
-          cd artifacts/zips && for i in ./*; do 
+          cd artifacts/zips && for i in ./*; do
             f=$(echo "${i##*/}");
             filename=$(echo $f| cut  -d'.' -f 1);
-            fileLastModifiedDate=$(date -r src/Lambdas/$filename/index.js +%s)
-            lambdaLastModifiedDate=$(aws lambda get-function --function-name $filename --query 'Configuration.LastModified')
-            lambdaLastModifiedDate="${lambdaLastModifiedDate//\"/}"
-            lambdaLastModifiedDate=$(date -d "$lambdaLastModifiedDate" +%s)
-            if [[ $fileLastModifiedDate -gt $lambdaLastModifiedDate ]]
-            then
-              matrixOutput+="{\"file\":\"${filename}\"},";
-            fi
+            matrixOutput+="{\"file\":\"${filename}\"},";
           done
           matrixOutput+="]}"
           echo "::set-output name=matrix::${matrixOutput}"
