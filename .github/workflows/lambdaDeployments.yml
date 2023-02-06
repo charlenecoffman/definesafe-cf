@@ -42,7 +42,7 @@ jobs:
                 # echo that shiz
                 echo $fileLastModifiedDate
                 echo $lambdaLastModifiedDate
-                
+
                 # if file last modified is after last lambda update, then add zip to matrix
                 if [[ $fileLastModifiedDate -gt $lambdaLastModifiedDate ]]
                 then
@@ -70,6 +70,7 @@ jobs:
         with:
           path: artifacts
       - name: Json Matrix Output
+        if: -d "artifacts/zips"
         id: jsonMatrixOutput
         run: |
           matrixOutput="{\"include\":["
