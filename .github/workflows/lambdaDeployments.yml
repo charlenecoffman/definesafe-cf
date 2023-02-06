@@ -23,6 +23,7 @@ jobs:
           do
             curl --version
             fileLastModifiedDate=$(curl -s "https://api.github.com/repos/charlenecoffman/definesafe-cf/commits?path=src/Lambdas/$i/index.js&page=1&per_page=1" | jq -r '.[0].commit.committer.date')
+            echo $fileLastModifiedDate
             lambdaLastModifiedDate=$(aws lambda get-function --function-name ${i%/} --query 'Configuration.LastModified') > /dev/null 2>&1
             if [ 0 -eq $? ]; then
               lambdaLastModifiedDate="${lambdaLastModifiedDate//\"/}"
