@@ -9,8 +9,34 @@ on:
     #   - completed
 
 jobs:
+  createMatrix:
+    runs-on: ubuntu-latest
+    needs: build
+    outputs:
+      matrix: ${{steps.jsonMatrixOutput.outputs.matrix}}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Json Matrix Output
+        id: jsonMatrixOutput
+        run: |
+          matrixOutput="{\"include\":["
+          cd src/Permissions/Lambdas && for i in ./*; do
+            f=$(echo "${i##*/}");
+            filename=$(echo $f| cut  -d'.' -f 1);
+            matrixOutput+="{\"lambdaName\":\"${filename}\"},";
+          done
+          matrixOutput+="]}"
+          echo "::set-output name=matrix::${matrixOutput}"
+          else
+            matrixOuput=''
+          fi
   addPermissionsToCreatePlan:
     runs-on: ubuntu-18.04
+    needs: createMatrix
+    if: ${{needs.createMatrix.outputs.matrix != '' && fromJson(needs.createMatrix.outputs.matrix) != '[]'}}
+    strategy:
+      matrix: ${{fromJson(needs.createMatrix.outputs.matrix)}}
     steps:
       - name: Setup AWS CLI
         uses: aws-actions/configure-aws-credentials@v1
@@ -24,7 +50,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          policy=$(aws iam list-policies --query 'Policies[?PolicyName == "CreatePlanPermissions"].Arn' --output text --region "us-east-1")
+          policy=$(aws iam list-policies --query 'Policies[?PolicyName == "${{matrix.lambdaName}}Permissions"].Arn' --output text --region "us-east-1")
           echo "::set-env name=POLICY::$policy"
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -35,8 +61,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          echo ${file://src/Permissions/CreatePlanPermissions.json}
-          policy=$(aws iam create-policy --policy-name "CreatePlanPermissions" --policy-document file://src/Permissions/CreatePlanPermissions.json --tags Key=Solution,Value=DefineSafe)
+          policy=$(aws iam create-policy --policy-name ${{matrix.lambdaName}} --policy-document file://src/Permissions/Lambdas/${{matrix.lambdaName}}Permissions.json --tags Key=Solution,Value=DefineSafe)
           echo $policy > returnObject.json
           sleep 10s
-          aws iam attach-role-policy --role-name "AWSLambdaBasicExecutionRole-CreatePlan" --policy-arn "$(jq -r '.Policy.Arn' returnObject.json)"
+          aws iam attach-role-policy --role-name "AWSLambdaBasicExecutionRole-${{matrix.lambdaName}}" --policy-arn "$(jq -r '.Policy.Arn' returnObject.json)"
