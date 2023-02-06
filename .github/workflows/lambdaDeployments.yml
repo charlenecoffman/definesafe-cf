@@ -29,12 +29,12 @@ jobs:
             fileLastModifiedDate=$(($fileDiff + $fileLastModifiedDate))
             
             echo "A test"
-            echo $i
+            echo ${i%/}
             echo "ok here it is $i"
             echo $fileLastModifiedDate
             echo "**************"
 
-            lambdaLastModifiedDate=$(aws lambda list-functions --query 'Functions[?FunctionName == `${i%/}`].LastModified' --output text --region "us-east-1")
+            lambdaLastModifiedDate=$(aws lambda list-functions --query 'Functions[?FunctionName == ${i%/}].LastModified' --output text --region "us-east-1")
             echo "here it comes!"
             echo $lambdaLastModifiedDate
             echo "^^ there it is"
