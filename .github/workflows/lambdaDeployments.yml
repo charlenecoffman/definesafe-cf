@@ -21,7 +21,7 @@ jobs:
           cd src/Lambdas
           for i in */
           do
-            fileLastModifiedDate=$(curl -s "https://api.github.com/repos/charlenecoffman/definesafe-cf/commits?path=src/Lambdas/$i/index.js&page=1&per_page=1" | jq -r '.[0].commit.committer.date')
+            fileLastModifiedDate=$(curl -s "https://api.github.com/repos/charlenecoffman/definesafe-cf/commits?path=src/Lambdas/${i}/index.js&page=1&per_page=1" | jq -r '.[0].commit.committer.date')
             fileLastModifiedDate=$(date -d "$fileLastModifiedDate" +%s)
             # round up to next ten minutes
             fileMod=$(($fileLastModifiedDate % 600))
