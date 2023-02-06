@@ -85,8 +85,10 @@ jobs:
           lambdaLastModifiedDate="${lambdaLastModifiedDate//\"/}"
           lambdaLastModifiedDate=$(date -d "$lambdaLastModifiedDate" +%s)
           # set env variable
-          shouldupdate=($fileLastModifiedDate > $lambdaLastModifiedDate)
-          echo "::set-env name=UPDATE::$shouldupdate"
+          if [[ $fileLastModifiedDate -ge $lambdaLastModifiedDate ]]
+          then
+            echo "::set-env name=UPDATE::$(true)"
+          fi
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
