@@ -85,7 +85,7 @@ jobs:
           lambdaLastModifiedDate="${lambdaLastModifiedDate//\"/}"
           lambdaLastModifiedDate=$(date -d "$lambdaLastModifiedDate" +%s)
           # set env variable
-          shouldupdate=(( $fileLastModifiedDate > $lambdaLastModifiedDate))
+          shouldupdate=($fileLastModifiedDate > $lambdaLastModifiedDate)
           echo "::set-env name=UPDATE::$shouldupdate"
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
