@@ -90,12 +90,12 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Update Function If Exists
-        if: env.UPDATE == 'true'
+        if: env.UPDATE == true
         run: aws lambda update-function-code --function-name ${{matrix.file}} --zip-file fileb://zips/${{matrix.file}}.zip
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: us-east-1
       - name: If function doesn't need updating, then do nothing
-        if: env.UPDATE == 'false'
+        if: env.UPDATE == false
         run: echo "Nothing needed"
