@@ -27,9 +27,6 @@ jobs:
           done
           matrixOutput+="]}"
           echo "::set-output name=matrix::${matrixOutput}"
-          else
-            matrixOuput=''
-          fi
   addPermissionsToCreatePlan:
     runs-on: ubuntu-18.04
     needs: createMatrix
