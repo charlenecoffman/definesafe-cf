@@ -28,7 +28,7 @@ jobs:
               lambdaLastModifiedDate=$(date -d "$lambdaLastModifiedDate" +%s)
               echo $lambdaLastModifiedDate
               echo $fileLastModifiedDate
-              if [[ $(echo "$(fileLastModifiedDate "+%Y%m%d%H%M") - ($(fileLastModifiedDate +%M)%5)" | bc) -gt $(echo "$(date "+%Y%m%d%H%M") - ($(lambdaLastModifiedDate +%M)%5)" | bc) ]]
+              if [[ $(echo "$($fileLastModifiedDate "+%Y%m%d%H%M") - ($($fileLastModifiedDate +%M)%5)" | bc) -gt $(echo "$($lambdaLastModifiedDate "+%Y%m%d%H%M") - ($($lambdaLastModifiedDate +%M)%5)" | bc) ]]
               then
                 (cd "$i"; zip -r "../${i%/}.zip" .)
               fi
