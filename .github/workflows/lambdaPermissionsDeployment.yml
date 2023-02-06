@@ -26,6 +26,8 @@ jobs:
         run: |
           policy=$(aws iam list-policies --query 'Policies[?PolicyName == "CreatePlanPermissions"].Arn' --output text --region "us-east-1")
           echo "::set-env name=POLICY::$policy"
+      - name: Checkout Code
+        uses: actions/checkout@v2
       - name: Create Plan Permissions If Does Not Exist
         if: env.POLICY == ''
         env:
