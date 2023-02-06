@@ -27,6 +27,12 @@ jobs:
             fileMod=$(($fileLastModifiedDate % 600))
             fileDiff=$((600 - $fileMod))
             fileLastModifiedDate=$(($fileDiff + $fileLastModifiedDate))
+            
+            echo "A test"
+            echo $i
+            echo "ok here it is $i"
+            echo `whatever ${i}`
+            echo "**************"
 
             lambdaLastModifiedDate=$(aws lambda list-functions --query 'Functions[?FunctionName == `${i%/}`].LastModified' --output text --region "us-east-1")
             echo "here it comes!"
