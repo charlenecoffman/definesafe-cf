@@ -89,7 +89,8 @@ jobs:
           #   echo "::set-env name=UPDATE::'false"
           # fi
           # echo `${{env.UPDATE}}`
-          echo $fileLastModifiedDate
+          echo $fileLastModifiedDate          
+          lambdaLastModifiedDate="${lambdaLastModifiedDate//\"/}"
           lambdaLastModifiedDate="${lambdaLastModifiedDate//-//}"
           # lambdaLastModifiedDate="${lambdaLastModifiedDate/T/ +}"
           lambdaLastModifiedDate="${lambdaLastModifiedDate/.000+0000/}"
