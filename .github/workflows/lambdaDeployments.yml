@@ -21,25 +21,29 @@ jobs:
           cd src/Lambdas
           for i in */
           do
-            fileLastModifiedDate=$(curl -s "https://api.github.com/repos/charlenecoffman/definesafe-cf/commits?path=src/Lambdas/${i%/}/index.js&page=1&per_page=1" | jq -r '.[0].commit.committer.date')
-            fileLastModifiedDate=$(date -d "$fileLastModifiedDate" +%s)
-            echo $fileLastModifiedDate
-            
-            fileMod=$(($fileLastModifiedDate % 600))
-            fileDiff=$((600 - $fileMod))
-            fileLastModifiedDate=$(($fileDiff + $fileLastModifiedDate))
-
             function=$(aws lambda list-functions --query "Functions[?FunctionName == '${i%/}']" --output json --region "us-east-1")
+            # comment
+            echo "what"
             echo $function
+            echo "ever"
+            # comment
             if [ $function -eq [] ]
             then
               echo "New lambda"
               (cd "$i"; zip -r "../${i%/}.zip" . -qq)
             else
+              fileLastModifiedDate=$(curl -s "https://api.github.com/repos/charlenecoffman/definesafe-cf/commits?path=src/Lambdas/${i%/}/index.js&page=1&per_page=1" | jq -r '.[0].commit.committer.date')
+              fileLastModifiedDate=$(date -d "$fileLastModifiedDate" +%s)
+              echo $fileLastModifiedDate
+              # comment
+              fileMod=$(($fileLastModifiedDate % 600))
+              fileDiff=$((600 - $fileMod))
+              fileLastModifiedDate=$(($fileDiff + $fileLastModifiedDate))
+              # comment
               lambdaLastModifiedDate=$function.LastModified
               lambdaLastModifiedDate="${lambdaLastModifiedDate//\"/}"
               lambdaLastModifiedDate=$(date -d "$lambdaLastModifiedDate" +%s)
-
+              # comment
               lamMod=$(($lambdaLastModifiedDate % 600))
               lamDiff=$((600 - $lamMod))
               lambdaLastModifiedDate=$(($lamDiff + $lambdaLastModifiedDate))
