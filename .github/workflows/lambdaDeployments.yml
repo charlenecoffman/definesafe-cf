@@ -29,13 +29,14 @@ jobs:
             fileDiff=$((600 - $fileMod))
             fileLastModifiedDate=$(($fileDiff + $fileLastModifiedDate))
 
-            lambdaLastModifiedDate=$(aws lambda list-functions --query "Functions[?FunctionName == '${i%/}'].LastModified" --output text --region "us-east-1")
-            echo "here it comes!"
-            echo $lambdaLastModifiedDate
-            echo "^^ there it is"
-
-            if [[ $lambdaLastModifiedDate -ne "[]" ]]
+            function=$(aws lambda list-functions --query "Functions[?FunctionName == '${i%/}']" --output json --region "us-east-1")
+            echo $function
+            if [ -z $function ]
             then
+              echo "New lambda"
+              (cd "$i"; zip -r "../${i%/}.zip" . -qq)
+            else
+              lambdaLastModifiedDate=$function.LastModified
               lambdaLastModifiedDate="${lambdaLastModifiedDate//\"/}"
               lambdaLastModifiedDate=$(date -d "$lambdaLastModifiedDate" +%s)
 
@@ -49,9 +50,6 @@ jobs:
                 echo "Got here 1"
                 (cd "$i"; zip -r "../${i%/}.zip" . -qq)
               fi
-            else
-              echo "Got here 2"
-              (cd "$i"; zip -r "../${i%/}.zip" . -qq)
             fi
           done
         env:
