@@ -45,9 +45,11 @@ jobs:
               # if file last modified is after last lambda update, then add zip to matrix
               if [[ $fileLastModifiedDate -gt $lambdaLastModifiedDate ]]
               then
+                echo "Got here 1"
                 (cd "$i"; zip -r "../${i%/}.zip" -qq)
               fi
             else
+                echo "Got here 2"
               (cd "$i"; zip -r "../${i%/}.zip" -qq)
             fi
           done
