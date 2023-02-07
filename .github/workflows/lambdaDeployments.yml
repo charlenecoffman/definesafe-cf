@@ -31,7 +31,7 @@ jobs:
 
             function=$(aws lambda list-functions --query "Functions[?FunctionName == '${i%/}']" --output json --region "us-east-1")
             echo $function
-            if [ -z $function ]
+            if [ $function -eq [] ]
             then
               echo "New lambda"
               (cd "$i"; zip -r "../${i%/}.zip" . -qq)
