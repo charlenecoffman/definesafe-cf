@@ -46,11 +46,11 @@ jobs:
               if [[ $fileLastModifiedDate -gt $lambdaLastModifiedDate ]]
               then
                 echo "Got here 1"
-                (cd "$i"; zip -r "../${i%/}.zip" -qq)
+                (cd "$i"; zip -r "../${i%/}.zip" . -qq)
               fi
             else
-                echo "Got here 2"
-              (cd "$i"; zip -r "../${i%/}.zip" -qq)
+              echo "Got here 2"
+              (cd "$i"; zip -r "../${i%/}.zip" . -qq)
             fi
           done
         env:
