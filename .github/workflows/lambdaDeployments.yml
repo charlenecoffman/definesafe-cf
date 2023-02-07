@@ -26,7 +26,7 @@ jobs:
           cd src/Lambdas
           for i in */
           do
-            function=$(aws lambda list-functions --query "Functions[?FunctionName == '${i%/}']" --output text --region "us-east-1")
+            function=$(aws lambda list-functions --query "Functions[?FunctionName == '${i%/}'].LastModified" --output text --region "us-east-1")
             # comment
             echo "what"
             echo $([[ -z "$function" ]])
