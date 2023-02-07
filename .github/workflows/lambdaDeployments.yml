@@ -21,10 +21,10 @@ jobs:
           cd src/Lambdas
           for i in */
           do
-            aws lambda list-functions --query "Functions[?FunctionName == '${i%/}']" --output json --region "us-east-1"
+            function=$(aws lambda list-functions --query "Functions[?FunctionName == '${i%/}']" --output json --region "us-east-1")
             # comment
             echo "what"
-            echo ${function}
+            echo ${function -z}
             echo "ever"
             # comment
             if [ $function -eq [] ]
