@@ -29,7 +29,7 @@ jobs:
             function=$(aws lambda list-functions --query "Functions[?FunctionName == '${i%/}']" --output json --region "us-east-1")
             # comment
             echo "what"
-            echo [[ -z "$function" ]]
+            echo $([[ -z "$function" ]])
             echo "ever"
             # comment
             if [[ -z "$function" ]]
