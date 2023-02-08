@@ -18,12 +18,40 @@ jobs:
         id: jsonMatrixOutput
         run: |
           matrixOutput="{\"include\":["
-          cd src/Permissions/Lambdas && for i in ./*; do
+          cd src/Permissions/Lambdas 
+          for i in ./*
+          do
             f=$(echo "${i##*/}");
             filename=$(echo $f| cut  -d'.' -f 1);
-            matrixOutput+="{\"lambdaName\":\"${filename}\"},";
+            lastUpdated=$(aws iam list-policies --query "Policies[?PolicyName == '${{matrix.lambdaName}}Permissions'].UpdateDate" --output text --region "us-east-1")
+            if [[ -z "$lastUpdated" ]]
+            then
+              matrixOutput+="{\"lambdaName\":\"${filename}\"},";
+            else
+              fileLastModifiedDate=$(curl -s "https://api.github.com/repos/charlenecoffman/definesafe-cf/commits?path=src/Permissions/Lambdas/${filename}.json&page=1&per_page=1" | jq -r '.[0].commit.committer.date')
+              fileLastModifiedDate=$(date -d "$fileLastModifiedDate" +%s)
+              fileMod=$(($fileLastModifiedDate % 600))
+              fileDiff=$((600 - $fileMod))
+              fileLastModifiedDate=$(($fileDiff + $fileLastModifiedDate))
+              policyLastUpdatedDate="${lastUpdated//\"/}"
+              policyLastUpdatedDate=$(date -d "$policyLastUpdatedDate" +%s)
+              lamMod=$(($policyLastUpdatedDate % 600))
+              lamDiff=$((600 - $lamMod))
+              policyLastUpdatedDate=$(($lamDiff + $policyLastUpdatedDate))
+              if [[ $fileLastModifiedDate -gt $policyLastUpdatedDate ]]
+              then
+                f=$(echo "${i##*/}");
+                filename=$(echo $f| cut  -d'.' -f 1);
+                matrixOutput+="{\"lambdaName\":\"${filename}\"},";
+              else
+                matrixOutput='';
+              fi
+            fi
           done
-          matrixOutput+="]}"
+          if matrixOutput != ''
+          then
+            matrixOutput+="]}"
+          fi
           echo "::set-output name=matrix::${matrixOutput}"
   addPermissions:
     runs-on: ubuntu-18.04
