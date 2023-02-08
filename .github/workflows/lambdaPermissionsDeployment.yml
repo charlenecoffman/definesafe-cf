@@ -54,14 +54,14 @@ jobs:
               then
                 echo "Yeah here something"
                 matrixOutput+="{\"lambdaName\":\"${filename}\"},";
-              else
-                matrixOutput='';
               fi
             fi
           done
-          if [[ ${matrixOutput} != '' ]]
+          if [[ ${matrixOutput} != "{\"include\":[" ]]
           then
             matrixOutput+="]}"
+          else
+            matrixOutput=''
           fi
           echo "::set-output name=matrix::${matrixOutput}"
   deployPermissions:
