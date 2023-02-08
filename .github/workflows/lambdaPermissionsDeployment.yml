@@ -30,6 +30,7 @@ jobs:
           cd src/Permissions/Lambdas 
           for i in ./*
           do
+            echo ${{matrix.lambdaName}}
             f=$(echo "${i##*/}");
             filename=$(echo $f| cut  -d'.' -f 1);
             lastUpdated=$(aws iam list-policies --query "Policies[?PolicyName == '${{matrix.lambdaName}}Permissions'].UpdateDate" --output text --region "us-east-1")
