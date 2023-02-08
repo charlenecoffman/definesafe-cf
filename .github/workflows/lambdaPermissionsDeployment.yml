@@ -52,6 +52,7 @@ jobs:
               echo $policyLastUpdatedDate
               if [[ $fileLastModifiedDate -gt $policyLastUpdatedDate ]]
               then
+                echo "Yeah here something"
                 matrixOutput+="{\"lambdaName\":\"${filename}\"},";
               else
                 matrixOutput='';
