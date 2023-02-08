@@ -40,8 +40,6 @@ jobs:
               policyLastUpdatedDate=$(($lamDiff + $policyLastUpdatedDate))
               if [[ $fileLastModifiedDate -gt $policyLastUpdatedDate ]]
               then
-                f=$(echo "${i##*/}");
-                filename=$(echo $f| cut  -d'.' -f 1);
                 matrixOutput+="{\"lambdaName\":\"${filename}\"},";
               else
                 matrixOutput='';
