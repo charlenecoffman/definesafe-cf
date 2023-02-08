@@ -47,6 +47,8 @@ jobs:
               lamMod=$(($policyLastUpdatedDate % 600))
               lamDiff=$((600 - $lamMod))
               policyLastUpdatedDate=$(($lamDiff + $policyLastUpdatedDate))
+              echo $fileLastModifiedDate
+              echo $policyLastUpdatedDate
               if [[ $fileLastModifiedDate -gt $policyLastUpdatedDate ]]
               then
                 matrixOutput+="{\"lambdaName\":\"${filename}\"},";
