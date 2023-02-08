@@ -67,7 +67,6 @@ jobs:
       - name: Json Matrix Output
         id: jsonMatrixOutput
         run: |
-          [ -d artifacts/zips ] && echo "yep"
           if [ -d artifacts/zips ]; then
             matrixOutput="{\"include\":["
             cd artifacts/zips && for i in ./*; do

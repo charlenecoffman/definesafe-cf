@@ -44,7 +44,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          policy=$(aws iam list-policies --query 'Policies[?PolicyName == "${{matrix.lambdaName}}Permissions"].Arn' --output text --region "us-east-1")
+          policy=$(aws iam list-policies --query "Policies[?PolicyName == '${{matrix.lambdaName}}Permissions'].Arn" --output text --region "us-east-1")
           echo "::set-env name=POLICY::$policy"
       - name: Checkout Code
         uses: actions/checkout@v2
