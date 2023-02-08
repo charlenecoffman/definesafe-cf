@@ -48,8 +48,6 @@ jobs:
               lamMod=$(($policyLastUpdatedDate % $minutesOfMarginInSeconds))
               lamDiff=$(($minutesOfMarginInSeconds - $lamMod))
               policyLastUpdatedDate=$(($lamDiff + $policyLastUpdatedDate))
-              echo $fileLastModifiedDate
-              echo $policyLastUpdatedDate
               if [[ $fileLastModifiedDate -gt $policyLastUpdatedDate ]]
               then
                 echo "Yeah here something"

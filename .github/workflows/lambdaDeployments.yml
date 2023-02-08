@@ -26,15 +26,16 @@ jobs:
             then
               (cd "$i"; zip -r "../${i%/}.zip" . -qq)
             else
+              minutesOfMarginInSeconds=600
               fileLastModifiedDate=$(curl -s "https://api.github.com/repos/charlenecoffman/definesafe-cf/commits?path=src/Lambdas/${i%/}/index.js&page=1&per_page=1" | jq -r '.[0].commit.committer.date')
               fileLastModifiedDate=$(date -d "$fileLastModifiedDate" +%s)
-              fileMod=$(($fileLastModifiedDate % 600))
-              fileDiff=$((600 - $fileMod))
+              fileMod=$(($fileLastModifiedDate % $minutesOfMarginInSeconds))
+              fileDiff=$(($minutesOfMarginInSeconds - $fileMod))
               fileLastModifiedDate=$(($fileDiff + $fileLastModifiedDate))
               lambdaLastModifiedDate="${function//\"/}"
               lambdaLastModifiedDate=$(date -d "$lambdaLastModifiedDate" +%s)
-              lamMod=$(($lambdaLastModifiedDate % 600))
-              lamDiff=$((600 - $lamMod))
+              lamMod=$(($lambdaLastModifiedDate % $minutesOfMarginInSeconds))
+              lamDiff=$(($minutesOfMarginInSeconds - $lamMod))
               lambdaLastModifiedDate=$(($lamDiff + $lambdaLastModifiedDate))
               if [[ $fileLastModifiedDate -gt $lambdaLastModifiedDate ]]
               then
