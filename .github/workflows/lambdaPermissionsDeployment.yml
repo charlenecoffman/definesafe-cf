@@ -60,7 +60,7 @@ jobs:
             matrixOutput+="]}"
           fi
           echo "::set-output name=matrix::${matrixOutput}"
-  addPermissions:
+  deployPermissions:
     runs-on: ubuntu-18.04
     needs: createMatrix
     if: ${{needs.createMatrix.outputs.matrix != '' && fromJson(needs.createMatrix.outputs.matrix) != '[]'}}
