@@ -12,10 +12,19 @@ jobs:
     outputs:
       matrix: ${{steps.jsonMatrixOutput.outputs.matrix}}
     steps:
+      - name: Setup AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          AWS-ACCESS-KEY-ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS-SECRET-ACCESS-KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS-REGION: us-east-1
       - name: Checkout Code
         uses: actions/checkout@v2
       - name: Json Matrix Output
         id: jsonMatrixOutput
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           matrixOutput="{\"include\":["
           cd src/Permissions/Lambdas 
