@@ -67,7 +67,7 @@ jobs:
       - name: Json Matrix Output
         id: jsonMatrixOutput
         run: |
-          doesItExist=$(-d artifacts/zip)
+          doesItExist=$([ -d artifacts/zip ])
           echo $cdoesItExist
           if [ -d artifacts/zip ]; then
             matrixOutput="{\"include\":["
