@@ -55,7 +55,7 @@ jobs:
               fi
             fi
           done
-          if matrixOutput != ''
+          if [[ ${matrixOutput} != '' ]]
           then
             matrixOutput+="]}"
           fi
