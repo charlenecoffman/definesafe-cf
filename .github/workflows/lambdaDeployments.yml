@@ -18,11 +18,6 @@ jobs:
       - name: Zip up each function
         id: zipfunctions
         run: |
-          the_world_is_flat=true
-          # ...do something interesting...
-          if [ "$the_world_is_flat" = true ] ; then
-              echo 'Be careful not to fall off!'
-          fi
           cd src/Lambdas
           for i in */
           do
@@ -72,6 +67,8 @@ jobs:
       - name: Json Matrix Output
         id: jsonMatrixOutput
         run: |
+          doesItExist=$(-d artifacts/zip)
+          echo $cdoesItExist
           if [ -d artifacts/zip ]; then
             matrixOutput="{\"include\":["
             cd artifacts/zips && for i in ./*; do
