@@ -107,5 +107,4 @@ jobs:
         run: |
           numberOfVersions=$(aws iam list-policy-versions --query 'Versions[*].VersionId' --policy-arn ${{env.POLICY}} --output json)
           echo $($numberOfVersions | jq length)
-          if 
           aws iam create-policy-version --policy-arn ${{env.POLICY}} --policy-document file://src/Permissions/Lambdas/${{matrix.lambdaName}}.json
