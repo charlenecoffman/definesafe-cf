@@ -12,7 +12,6 @@
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
                 "dynamodb:Query",
-                "dynamodb:UpdateItem",
                 "dynamodb:GetRecords"
             ],
             "Resource": [
