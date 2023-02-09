@@ -112,7 +112,8 @@ jobs:
           versions=$(aws iam list-policy-versions --query "Versions[*].VersionId" --policy-arn ${{env.POLICY}} --output json)
           echo "versions prints below"
           echo $versions
-          echo $(jq '.[] | length' version)
+          echo $version | jq 'length'
+          echo $(version | jq 'length')
           echo "after versions prints"
           aws iam create-policy-version --policy-arn ${{env.POLICY}} --policy-document file://src/Permissions/Lambdas/${{matrix.lambdaName}}.json --set-as-default
           echo "after create policy version"
