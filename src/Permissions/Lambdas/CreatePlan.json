@@ -12,8 +12,7 @@
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
                 "dynamodb:Query",
-                "dynamodb:UpdateItem",
-                "dynamodb:GetRecords"
+                "dynamodb:UpdateItem"
             ],
             "Resource": [
                 "arn:aws:dynamodb:*:042537148068:table/Plans/stream/*",

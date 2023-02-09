@@ -109,11 +109,12 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           echo "starting"
-          versions=$(aws iam list-policy-versions --query "Versions[*].VersionId" --policy-arn ${{env.POLICY}} --output json)
-          echo "versions prints below"
-          echo $versions
-          echo $version | jq 'length'
-          echo $(version | jq 'length')
-          echo "after versions prints"
+          versions=$(aws iam list-policy-versions --query "Versions[*].VersionId | length(@)" --policy-arn ${{env.POLICY}} --output text)
+          if [ $versions == "5" ]
+          then
+            # delete the oldest one
+             aws iam delete-policy-version --policy-arn ${{env.POLICY}} --version-id "v5"
+             sleep 10s
+          fi
           aws iam create-policy-version --policy-arn ${{env.POLICY}} --policy-document file://src/Permissions/Lambdas/${{matrix.lambdaName}}.json --set-as-default
           echo "after create policy version"
