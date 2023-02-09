@@ -36,6 +36,7 @@ jobs:
             f=$(echo "${i##*/}");
             filename=$(echo $f| cut  -d'.' -f 1);
             lastUpdated=$(aws iam list-policies --query "Policies[?PolicyName == '${filename}Permissions'].UpdateDate" --output text --region "us-east-1")
+            echo "$lastUpdated"
             if [[ -z "$lastUpdated" ]]
             then
               matrixOutput+="{\"lambdaName\":\"${filename}\"},";
@@ -50,6 +51,8 @@ jobs:
               lamMod=$(($policyLastUpdatedDate % $minutesOfMarginInSeconds))
               lamDiff=$(($minutesOfMarginInSeconds - $lamMod))
               policyLastUpdatedDate=$(($lamDiff + $policyLastUpdatedDate))
+              echo $fileLastModifiedDate
+              echo $policyLastUpdatedDate
               if [[ $fileLastModifiedDate -gt $policyLastUpdatedDate ]]
               then
                 echo "Yeah here something"
