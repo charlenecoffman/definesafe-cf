@@ -6,7 +6,6 @@
             "Effect": "Allow",
             "Action": [
                 "dynamodb:BatchGetItem",
-                "dynamodb:BatchWriteItem",
                 "dynamodb:PutItem",
                 "dynamodb:DescribeTable",
                 "dynamodb:DeleteItem",
