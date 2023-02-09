@@ -105,8 +105,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          echo $({{env.POLICY}} | jq length)
           numberOfVersions=$(aws iam list-policy-versions --query 'Versions[*].VersionId' --policy-arn ${{env.POLICY}})
-          echo $numberOfVersions
+          echo $(numberOfVersions | jq length)
           if 
           aws iam create-policy-version --policy-arn ${{env.POLICY}} --policy-document file://src/Permissions/Lambdas/${{matrix.lambdaName}}.json
