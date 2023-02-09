@@ -110,5 +110,5 @@ jobs:
           echo "versions prints below"
           echo $versions
           echo "after versions prints"
-          aws iam create-policy-version --policy-arn ${{env.POLICY}} --policy-document file://src/Permissions/Lambdas/${{matrix.lambdaName}}.json
+          aws iam create-policy-version --policy-arn ${{env.POLICY}} --policy-document file://src/Permissions/Lambdas/${{matrix.lambdaName}}.json --set-as-default
           echo "after create policy version"
