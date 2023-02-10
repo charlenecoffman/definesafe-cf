@@ -114,7 +114,7 @@ jobs:
           numberOfVersions=$(jq length versionArray.json)
           if [ $numberOfVersions == "5" ]
           then
-            oldestVersion=$versions[0]
+            oldestVersion=$(jq '.[4]' versionArray.json)
             # delete the oldest one
              aws iam delete-policy-version --policy-arn ${{env.POLICY}} --version-id $oldestVersion
              sleep 10s
