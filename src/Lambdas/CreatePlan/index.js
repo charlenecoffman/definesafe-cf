@@ -24,13 +24,7 @@ exports.handler = async (event, context, callback) => {
       }
     };
       
-    await documentClient.put(params, function(err, data) {
-      if (err) {
-        console.log("Error Test", err);
-      } else {
-        console.log("Success", data);
-      }
-    }).promise();
+    await documentClient.put(params).promise();
 
     response.body = JSON.stringify(newPlan);
     callback(null, response);
