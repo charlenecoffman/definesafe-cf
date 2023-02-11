@@ -15,22 +15,22 @@ exports.handler = async (event, context, callback) => {
     newPlan.Plan_Id = uuid.v1();
 
     var params = {
-        TableName: 'Plans',
-        Item: {
-          'Plan_Id': newPlan.Plan_Id,
-          'User_Id': newPlan.User_Id,
-          "Coping_Skills": newPlan.Coping_Skills,
-          "Triggers": newPlan.Triggers
-        }
-      };
+      TableName: 'Plans',
+      Item: {
+        'Plan_Id': newPlan.Plan_Id,
+        'User_Id': newPlan.User_Id,
+        "Coping_Skills": newPlan.Coping_Skills,
+        "Triggers": newPlan.Triggers
+      }
+    };
       
-      documentClient.put(params, function(err, data) {
-        if (err) {
-          console.log("Error Test", err);
-        } else {
-          console.log("Success", data);
-        }
-      });
+    await documentClient.put(params, function(err, data) {
+      if (err) {
+        console.log("Error Test", err);
+      } else {
+        console.log("Success", data);
+      }
+    }).promise();
 
     response.body = JSON.stringify(newPlan);
     callback(null, response);
