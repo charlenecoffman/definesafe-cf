@@ -36,7 +36,6 @@ jobs:
             f=$(echo "${i##*/}");
             filename=$(echo $f| cut  -d'.' -f 1);
             lastUpdated=$(aws iam list-policies --query "Policies[?PolicyName == '${filename}Permissions'].UpdateDate" --output text --region "us-east-1")
-            echo "$lastUpdated"
             if [[ -z "$lastUpdated" ]]
             then
               matrixOutput+="{\"lambdaName\":\"${filename}\"},";
@@ -51,11 +50,8 @@ jobs:
               lamMod=$(($policyLastUpdatedDate % $minutesOfMarginInSeconds))
               lamDiff=$(($minutesOfMarginInSeconds - $lamMod))
               policyLastUpdatedDate=$(($lamDiff + $policyLastUpdatedDate))
-              echo $fileLastModifiedDate
-              echo $policyLastUpdatedDate
               if [[ $fileLastModifiedDate -gt $policyLastUpdatedDate ]]
               then
-                echo "Yeah here something"
                 matrixOutput+="{\"lambdaName\":\"${filename}\"},";
               fi
             fi
@@ -108,7 +104,6 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          echo "starting"
           versions=$(aws iam list-policy-versions --query "Versions[*].VersionId" --policy-arn ${{env.POLICY}} --output json)
           echo $versions > versionArray.json
           numberOfVersions=$(jq length versionArray.json)
@@ -121,4 +116,3 @@ jobs:
              sleep 10s
           fi
           aws iam create-policy-version --policy-arn ${{env.POLICY}} --policy-document file://src/Permissions/Lambdas/${{matrix.lambdaName}}.json --set-as-default
-          echo "after create policy version"
