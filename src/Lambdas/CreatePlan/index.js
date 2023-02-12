@@ -1,5 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
 var aws = require('aws-sdk');
-var uuid = require('uuid');
 var documentClient = new aws.DynamoDB.DocumentClient();
 
 exports.handler = async (event, context, callback) => {
@@ -12,7 +12,7 @@ exports.handler = async (event, context, callback) => {
 
     const newPlan = event.body;
 
-    newPlan.Plan_Id = uuid.v1();
+    newPlan.Plan_Id = uuid4();
 
     var params = {
       TableName: 'Plans',
