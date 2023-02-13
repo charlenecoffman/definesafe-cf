@@ -23,7 +23,7 @@ exports.handler = async (event, context, callback) => {
         "Triggers": newPlan.Triggers
       }
     };
-    // Orion says 123 pizza!
+    // Orion says 123 pizza! okay????
     await documentClient.put(params).promise();
 
     response.body = JSON.stringify(newPlan);
