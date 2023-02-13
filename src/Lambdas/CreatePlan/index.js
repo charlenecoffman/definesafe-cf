@@ -1,4 +1,4 @@
-const {"v4": uuidv4} = require('uuid');
+var uuidv4 = require('uuid');
 var aws = require('aws-sdk');
 var documentClient = new aws.DynamoDB.DocumentClient();
 
