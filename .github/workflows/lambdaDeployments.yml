@@ -31,7 +31,7 @@ jobs:
               contentsLocation="${contentsLocation%\"}"
               contentsLocation="${contentsLocation#\"}"
               curl -s $contentsLocation --output ../${i%/}_currentLambda.zip
-              unzip -d ../ -o ../${i%/}_currentLambda.zip
+              unzip -qq -d ../ -o ../${i%/}_currentLambda.zip
               contentsOfLambda=$(<../index.js)
               if [ "$fileContents" != "$contentsOfLambda" ]
               then
