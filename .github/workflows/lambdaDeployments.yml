@@ -30,9 +30,10 @@ jobs:
               contentsLocation=$(aws lambda get-function --function-name ${i%/} --query 'Code.Location')
               contentsLocation="${contentsLocation%\"}"
               contentsLocation="${contentsLocation#\"}"
-              curl -s $contentsLocation --output ../${i%/}_currentLambda.zip
-              unzip -qq -d ../ -o ../${i%/}_currentLambda.zip
-              contentsOfLambda=$(<../index.js)
+              mkdir ../${i%/}
+              curl -s $contentsLocation --output ../${i}currentLambda.zip
+              unzip -qq -d ../${i} -o ../${i}currentLambda.zip
+              contentsOfLambda=$(<../${i}index.js)
               if [ "$fileContents" != "$contentsOfLambda" ]
               then
                 (cd "$i"; zip -r "../${i%/}.zip" . -qq)
