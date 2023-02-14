@@ -21,23 +21,19 @@ jobs:
           cd src/Lambdas
           for i in */
           do
-            function=$(aws lambda list-functions --query "Functions[?FunctionName == '${i%/}'].LastModified" --output text --region "us-east-1")
+            function=$(aws lambda list-functions --query "Functions[?FunctionName == '${i%/}'].FunctionName" --output text --region "us-east-1")
             if [[ -z "$function" ]]
             then
               (cd "$i"; zip -r "../${i%/}.zip" . -qq)
             else
-              minutesOfMarginInSeconds=600
-              fileLastModifiedDate=$(curl -s "https://api.github.com/repos/charlenecoffman/definesafe-cf/commits?path=src/Lambdas/${i%/}/index.js&page=1&per_page=1" | jq -r '.[0].commit.committer.date')
-              fileLastModifiedDate=$(date -d "$fileLastModifiedDate" +%s)
-              fileMod=$(($fileLastModifiedDate % $minutesOfMarginInSeconds))
-              fileDiff=$(($minutesOfMarginInSeconds - $fileMod))
-              fileLastModifiedDate=$(($fileDiff + $fileLastModifiedDate))
-              lambdaLastModifiedDate="${function//\"/}"
-              lambdaLastModifiedDate=$(date -d "$lambdaLastModifiedDate" +%s)
-              lamMod=$(($lambdaLastModifiedDate % $minutesOfMarginInSeconds))
-              lamDiff=$(($minutesOfMarginInSeconds - $lamMod))
-              lambdaLastModifiedDate=$(($lamDiff + $lambdaLastModifiedDate))
-              if [[ $fileLastModifiedDate -gt $lambdaLastModifiedDate ]]
+              fileContents=$(curl -s "https://raw.githubusercontent.com/charlenecoffman/definesafe-cf/main/src/Lambdas/${i%/}/index.js")
+              contentsLocation=$(aws lambda get-function --function-name ${i%/} --query 'Code.Location')
+              contentsLocation="${contentsLocation%\"}"
+              contentsLocation="${contentsLocation#\"}"
+              curl $contentsLocation --output lambda.zip
+              unzip -d . lambda.zip
+              contentsOfLambda=$(<index.js)
+              if [ "$fileContents" != "$contentsOfLambda" ]
               then
                 (cd "$i"; zip -r "../${i%/}.zip" . -qq)
               fi
