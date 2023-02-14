@@ -12,7 +12,7 @@ exports.handler = async (event, context, callback) => {
 
     const newPlan = event.body;
 
-    newPlan.Plan_Id = uuid();
+    newPlan.Plan_Id = uuid(); //maybe?
 
     var params = {
       TableName: 'Plans',
