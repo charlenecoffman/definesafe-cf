@@ -1,4 +1,4 @@
-var uuidv4 = require('uuid');
+const { uuid } = require('uuidv4');
 var aws = require('aws-sdk');
 var documentClient = new aws.DynamoDB.DocumentClient();
 
@@ -12,7 +12,7 @@ exports.handler = async (event, context, callback) => {
 
     const newPlan = event.body;
 
-    newPlan.Plan_Id = uuidv4();
+    newPlan.Plan_Id = uuid();
 
     var params = {
       TableName: 'Plans',
