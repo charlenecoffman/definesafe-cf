@@ -20,7 +20,7 @@ exports.handler = async (event, context, callback) => {
         'Plan_Id': newPlan.Plan_Id,
         'User_Id': newPlan.User_Id,
         "Coping_Skills": newPlan.Coping_Skills,
-        "Triggers": newPlan.Triggers //this is a test
+        "Triggers": newPlan.Triggers
       }
     };
     await documentClient.put(params).promise();
