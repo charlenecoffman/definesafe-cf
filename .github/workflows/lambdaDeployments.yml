@@ -7,7 +7,7 @@ jobs:
   zipIfAnyChanges:
     runs-on: ubuntu-latest
     outputs:
-        matrix: ${{steps.jsonMatrixOutput.outputs.matrix}}
+        matrix: ${{steps.zipfunctions.outputs.matrix}}
     steps:
       - name: Setup AWS CLI
         uses: aws-actions/configure-aws-credentials@v1
