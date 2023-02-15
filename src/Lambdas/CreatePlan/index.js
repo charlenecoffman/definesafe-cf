@@ -25,7 +25,12 @@ exports.handler = async (event, context, callback) => {
         "Triggers": newPlan.Triggers
       }
     };
-    await documentClient.put(params).promise();
+    await documentClient.put(params)
+      .promise()
+      .catch(err => {
+        response.body = JSON.stringify(err);
+        callback(null, response)
+      });
 
     response.body = JSON.stringify(newPlan);
     callback(null, response);
