@@ -21,17 +21,18 @@ exports.handler = async (event, context, callback) => {
       Item: {
         'Plan_Id': newPlan.Plan_Id,
         'User_Id': newPlan.User_Id,
-        "Coping_Skills": newPlan.Coping_Skills, //okidoke
+        "Coping_Skills": newPlan.Coping_Skills,
         "Triggers": newPlan.Triggers
       }
     };
     await documentClient.put(params)
       .promise()
+      .then(resp => {
+        response.body = JSON.stringify(newPlan);
+        callback(null, response);
+      })
       .catch(err => {
         response.body = JSON.stringify(err);
         callback(null, response)
       });
-
-    response.body = JSON.stringify(newPlan);
-    callback(null, response);
 }
