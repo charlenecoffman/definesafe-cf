@@ -66,10 +66,10 @@ jobs:
           path: src/Lambdas/*.zip
   deploy:
     runs-on: ubuntu-latest
-    needs: createMatrix    
-    if: ${{needs.createMatrix.outputs.matrix != '' && fromJson(needs.createMatrix.outputs.matrix) != '[]'}}
+    needs: zipIfAnyChanges    
+    if: ${{needs.zipIfAnyChanges.outputs.matrix != '' && fromJson(needs.zipIfAnyChanges.outputs.matrix) != '[]'}}
     strategy:
-      matrix: ${{fromJson(needs.createMatrix.outputs.matrix)}}
+      matrix: ${{fromJson(needs.zipIfAnyChanges.outputs.matrix)}}
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v2
