@@ -14,6 +14,8 @@ exports.handler = async (event, context, callback) => {
 
     newPlan.Plan_Id = uuid();
 
+    console.log(newPlan);
+
     var params = {
       TableName: 'Plans',
       Item: {

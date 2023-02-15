@@ -45,7 +45,7 @@ jobs:
                 (cd "$i"; zip -r "../${i%/}.zip" . -qq)                
                 matrixOutput+="{\"file\":\"${i%/}\"},";
               fi
-            fi           
+            fi
           done
           if [[ $matrixOutput == *"file"* ]]
           then
