@@ -10,24 +10,28 @@ exports.handler = async (event, context, callback) => {
         }
     };
 
+    const newPlan = event.body;
+
     var params = {
       TableName: 'Plans',
       Item: {
         'Plan_Id':  uuid(),
-        'User_Id': event.body.User_Id,
-        "Coping_Skills": event.body.Coping_Skills,
-        "Triggers": event.body.Triggers
+        'User_Id': newPlan.User_Id,
+        "Coping_Skills": newPlan.Coping_Skills,
+        "Triggers": newPlan.Triggers
       }
     };
     await documentClient.put(params)
       .promise()
       .then(resp => {
         response.body = JSON.stringify(params);
+        response.body += JSON.stringify(newPlan);
         callback(null, response);
       })
       .catch(err => {
         response.body = JSON.stringify(err);
         response.body += JSON.stringify(params);
+        response.body += JSON.stringify(newPlan);
         callback(null, response)
       });
 }
