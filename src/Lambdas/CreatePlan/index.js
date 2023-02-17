@@ -10,7 +10,7 @@ exports.handler = async (event, context, callback) => {
         }
     };
 
-    const newPlan = event.body;
+    const newPlan = JSON.parse(event.body);
 
     var params = {
       TableName: 'Plans',
@@ -25,13 +25,10 @@ exports.handler = async (event, context, callback) => {
       .promise()
       .then(resp => {
         response.body = JSON.stringify(params);
-        response.body += JSON.stringify(newPlan);
         callback(null, response);
       })
       .catch(err => {
         response.body = JSON.stringify(err);
-        response.body += JSON.stringify(params);
-        response.body += JSON.stringify(newPlan);
         callback(null, response)
       });
 }
