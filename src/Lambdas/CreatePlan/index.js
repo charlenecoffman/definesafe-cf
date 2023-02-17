@@ -10,30 +10,24 @@ exports.handler = async (event, context, callback) => {
         }
     };
 
-    const newPlan = event.body;
-
-    newPlan.Plan_Id = uuid();
-
-    console.log(newPlan);
-
     var params = {
       TableName: 'Plans',
       Item: {
-        'Plan_Id': newPlan.Plan_Id,
-        'User_Id': newPlan.User_Id,
-        "Coping_Skills": newPlan.Coping_Skills,
-        "Triggers": newPlan.Triggers
+        'Plan_Id':  uuid(),
+        'User_Id': event.body.User_Id,
+        "Coping_Skills": event.body.Coping_Skills,
+        "Triggers": event.body.Triggers
       }
     };
     await documentClient.put(params)
       .promise()
       .then(resp => {
-        response.body = JSON.stringify(newPlan);
+        response.body = JSON.stringify(params);
         callback(null, response);
       })
       .catch(err => {
         response.body = JSON.stringify(err);
-        response.body += JSON.stringify(newPlan);
+        response.body += JSON.stringify(params);
         callback(null, response)
       });
 }
