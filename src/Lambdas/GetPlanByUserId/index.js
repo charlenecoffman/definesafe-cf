@@ -9,19 +9,21 @@ exports.handler = async (event, context, callback) => {
         }
     };
 
-    const qsParams = JSON.parse(event.queryStringParameters );
+    const qsParams = JSON.parse(event.queryStringParameters);
 
     var params = {
       TableName: 'Plans',
-      Key: {
-        'User_Id':  qsParams.User_Id
-      }
+      IndexName: 'User_Id',
+      KeyConditionExpression: "User_Id = :User_Id",
+        ExpressionAttributeValues: {
+            ":User_Id": qsParams.User_Id
+        },
     };
 
-    await documentClient.get(params)
+    await documentClient.query(params)
       .promise()
       .then(resp => {
-        response.body = JSON.stringify(params);
+        response.body = JSON.stringify(resp);
         callback(null, response);
       })
       .catch(err => {
