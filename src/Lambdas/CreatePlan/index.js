@@ -33,6 +33,7 @@ exports.handler = async (event, context, callback) => {
       })
       .catch(err => {
         response.body = JSON.stringify(err);
+        response.body += JSON.stringify(newPlan);
         callback(null, response)
       });
 }
