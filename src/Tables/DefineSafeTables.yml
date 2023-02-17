@@ -15,6 +15,13 @@ Resources:
         ReadCapacityUnits: "5"
         WriteCapacityUnits: "5"
       TableName: "Plans"
+      GlobalSecondaryIndexes:
+        -
+          IndexName: "User_Id"
+          KeySchema: 
+            - 
+              AttributeName: "User_Id"
+              KeyType: "HASH"
       Tags:
         - Key: Solution
           Value: DefineSafe
