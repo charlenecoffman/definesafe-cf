@@ -128,15 +128,6 @@ Resources:
               - /invocations
         IntegrationResponses:
           - StatusCode: 200
-        RequestTemplates:
-          application/json:
-            'Fn::Join':
-              - ''
-              - - '{'
-                - '"name": "$input.params(''plan_id'')"'
-                - '}'
-      RequestParameters:
-        method.request.querystring.name: false
       ResourceId:
         Ref: PlanResource
       RestApiId:
@@ -181,8 +172,6 @@ Resources:
               - /invocations
         IntegrationResponses:
           - StatusCode: 200
-      RequestParameters:
-        method.request.querystring.name: false
       ResourceId:
         Ref: PlanResource
       RestApiId:
