@@ -16,7 +16,7 @@ exports.handler = async (event, context, callback) => {
       Key: {
         Plan_Id: updatePlan.Plan_Id
       },
-      UpdateExpression: 'set Triggers = :triggers, Coping_Skills = :copingSkills',
+      UpdateExpression: 'SET Triggers = :triggers, Coping_Skills = :copingSkills',
       ExpressionAttributeValues: {
         ':triggers' : updatePlan.Triggers,
         ':copingSkills' : updatePlan.CopingSkills,
@@ -31,6 +31,7 @@ exports.handler = async (event, context, callback) => {
       })
       .catch(err => {
         response.body = JSON.stringify(err);
+        response.body += JSON.stringify(params);
         callback(null, response)
       });
     
