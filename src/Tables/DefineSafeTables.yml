@@ -7,6 +7,9 @@ Resources:
         - 
           AttributeName: "Plan_Id"
           AttributeType: "S"
+        - 
+          AttributeName: "User_Id"
+          AttributeType: "S"
       KeySchema: 
         - 
           AttributeName: "Plan_Id"
