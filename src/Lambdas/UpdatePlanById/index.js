@@ -16,8 +16,7 @@ exports.handler = async (event, context, callback) => {
       Key: {
         Plan_Id: updatePlan.Plan_Id
       },
-      UpdateExpression: 'set #triggers = :triggers, #copingSkills = :copingSkills',
-      ExpressionAttributeNames: {'#triggers' : 'Triggers', '#copingSkills' : 'Coping_Skills'},
+      UpdateExpression: 'set Triggers = :triggers, Coping_Skills = :copingSkills',
       ExpressionAttributeValues: {
         ':triggers' : updatePlan.Triggers,
         ':copingSkills' : updatePlan.CopingSkills,
