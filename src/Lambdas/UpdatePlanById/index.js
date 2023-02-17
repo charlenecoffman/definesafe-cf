@@ -19,7 +19,7 @@ exports.handler = async (event, context, callback) => {
       UpdateExpression: 'SET Triggers = :triggers, Coping_Skills = :copingSkills',
       ExpressionAttributeValues: {
         ':triggers' : updatePlan.Triggers,
-        ':copingSkills' : updatePlan.CopingSkills,
+        ':copingSkills' : updatePlan.Coping_Skills,
       }
     };
 
