@@ -9,7 +9,7 @@ exports.handler = async (event, context, callback) => {
         }
     };
 
-    const qsParams = JSON.parse(event.queryStringParameters);
+    const qsParams = event.queryStringParameters;
 
     var params = {
       TableName: 'Plans',
