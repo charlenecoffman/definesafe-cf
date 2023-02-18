@@ -20,7 +20,7 @@ jobs:
       - name: Zip up each function
         id: zipfunctions
         run: |
-          matrixOutput="{\"include\":["
+          matrixOutput=""
           cd src/Lambdas
           for i in */
           do
@@ -42,18 +42,17 @@ jobs:
               contentsOfLambda=$(<${dirName}/index.js)
               if [ "$fileContents" != "$contentsOfLambda" ]
               then
-                (cd "$i"; zip -r "../${i%/}.zip" . -qq)                
+                (cd "$i"; zip -r "../${i%/}.zip" . -qq)
                 matrixOutput+="{\"file\":\"${i%/}\"},";
               fi
             fi
           done
-          if [[ $matrixOutput == *"file"* ]]
+          if [[ $matrixOutput != "" ]]
           then
-            matrixOutput+="]}"
+            matrixOutput="{\"include\":[" + matrixOutput + "]}"
             echo "::set-output name=matrix::${matrixOutput}"
             echo "Created matrix: '${matrixOutput}"
           else
-            matrixOuput=''
             echo "Empty matrix"
           fi
         env:
