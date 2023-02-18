@@ -18,7 +18,7 @@ exports.handler = async (event, context, callback) => {
       ExpressionAttributeValues: {
           ":User_Id": qsParams.User_Id
       },
-      Select: ALL_ATTRIBUTES
+      Select: 'ALL_ATTRIBUTES'
     };
 
     await documentClient.query(params)
