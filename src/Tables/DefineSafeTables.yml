@@ -10,6 +10,12 @@ Resources:
         - 
           AttributeName: "User_Id"
           AttributeType: "S"
+        - 
+          AttributeName: "Triggers"
+          AttributeType: "S"
+        - 
+          AttributeName: "Coping_Skills"
+          AttributeType: "S"
       KeySchema: 
         - 
           AttributeName: "Plan_Id"
