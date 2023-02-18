@@ -30,6 +30,7 @@ Resources:
               - "User_Id"
               - "Triggers"
               - "Coping_Skills"
+              - "Contacts"
             ProjectionType: "INCLUDE"
           ProvisionedThroughput: 
             ReadCapacityUnits: "5"
