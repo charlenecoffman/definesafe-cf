@@ -14,11 +14,10 @@ exports.handler = async (event, context, callback) => {
     var params = {
       TableName: 'Plans',
       IndexName: 'User_Id',
-      AttributesToGet: ['Plan_Id', 'User_Id', 'Triggers', 'Coping_Skills'],
       KeyConditionExpression: "User_Id = :User_Id",
-        ExpressionAttributeValues: {
-            ":User_Id": qsParams.User_Id
-        },
+      ExpressionAttributeValues: {
+          ":User_Id": qsParams.User_Id
+      },
     };
 
     await documentClient.query(params)
