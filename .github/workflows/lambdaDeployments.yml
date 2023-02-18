@@ -49,7 +49,7 @@ jobs:
           done
           if [[ $matrixOutput != "" ]]
           then
-            matrixOutput="{\"include\":[" + matrixOutput + "]}"
+            matrixOutput="{\"include\":[${matrixOutput}]}"
             echo "::set-output name=matrix::${matrixOutput}"
             echo "Created matrix: '${matrixOutput}"
           else
