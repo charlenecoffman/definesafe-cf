@@ -28,7 +28,7 @@ Resources:
           Projection: 
             NonKeyAttributes: 
               - "User_Id"
-            ProjectionType: "INCLUDE"
+            ProjectionType: "ALL"
           ProvisionedThroughput: 
             ReadCapacityUnits: "5"
             WriteCapacityUnits: "5"
