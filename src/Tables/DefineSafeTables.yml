@@ -25,9 +25,7 @@ Resources:
             - 
               AttributeName: "User_Id"
               KeyType: "HASH"
-          Projection: 
-            NonKeyAttributes: 
-              - "User_Id"
+          Projection:
             ProjectionType: "ALL"
           ProvisionedThroughput: 
             ReadCapacityUnits: "5"
