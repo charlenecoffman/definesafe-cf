@@ -63,6 +63,11 @@ jobs:
         with:
           name: zips
           path: src/Lambdas/*.zip
+      - name: Upload Permissions Docs to artifact container
+        uses: actions/upload-artifact@master
+        with:
+          name: permissions
+          path: src/Permissions/RolePolicies/*.json
   deploy:
     runs-on: ubuntu-latest
     needs: zipIfAnyChanges    
@@ -93,9 +98,9 @@ jobs:
         run: |
           if [ $matrix.file == 'CustomAuthorizer' ]
           then
-            role=$(aws iam create-role --role-name "AWSLambdaBasicExecutionRole-${{ matrix.file }}" --assume-role-policy-document file://src/Permissions/RolePolicies/CustomAuthRolePolicy.json --region "us-east-1");
+            role=$(aws iam create-role --role-name "AWSLambdaBasicExecutionRole-${{ matrix.file }}" --assume-role-policy-document file://permissions/CustomAuthRolePolicy.json --region "us-east-1");
           else
-            role=$(aws iam create-role --role-name "AWSLambdaBasicExecutionRole-${{ matrix.file }}" --assume-role-policy-document file://src/Permissions/RolePolicies/LambdaExecutionRolePolicy.json --region "us-east-1");
+            role=$(aws iam create-role --role-name "AWSLambdaBasicExecutionRole-${{ matrix.file }}" --assume-role-policy-document file://permissions/LambdaExecutionRolePolicy.json --region "us-east-1");
           fi
           echo $role > returnObject.json
           sleep 10s
