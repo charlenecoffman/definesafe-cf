@@ -10,7 +10,6 @@
                 ]
             },
             "Action": [
-                "lambda:InvokeFunction",
                 "sts:AssumeRole"
             ]
         }
