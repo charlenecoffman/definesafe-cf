@@ -15,8 +15,8 @@ Resources:
           AttributeName: "Plan_Id"
           KeyType: "HASH"
       ProvisionedThroughput: 
-        ReadCapacityUnits: "5"
-        WriteCapacityUnits: "5"
+        ReadCapacityUnits: "1"
+        WriteCapacityUnits: "1"
       TableName: "Plans"
       GlobalSecondaryIndexes:
         -
@@ -28,8 +28,8 @@ Resources:
           Projection:
             ProjectionType: "ALL"
           ProvisionedThroughput: 
-            ReadCapacityUnits: "5"
-            WriteCapacityUnits: "5"
+            ReadCapacityUnits: "1"
+            WriteCapacityUnits: "1"
       Tags:
         - Key: Solution
           Value: DefineSafe
