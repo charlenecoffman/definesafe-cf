@@ -34,7 +34,7 @@ jobs:
             filename=$(echo $f| cut  -d'.' -f 1);
             policy=$(aws iam list-policies --query "Policies[?PolicyName == '${filename}Permissions']" --output json --region "us-east-1")
             echo $policy
-            if [[ -z "$policy" ]]
+            if [[ -z $policy ]]
             then
               matrixOutput+="{\"lambdaName\":\"${filename}\"},";
             else
