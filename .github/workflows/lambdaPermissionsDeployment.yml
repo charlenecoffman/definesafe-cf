@@ -33,17 +33,13 @@ jobs:
             f=$(echo "${i##*/}");
             filename=$(echo $f| cut  -d'.' -f 1);
             policy=$(aws iam list-policies --query "Policies[?PolicyName == '${filename}Permissions']" --output json --region "us-east-1")
-            echo $policy
-            if [[ -z $policy ]]
+            policyArn=$(echo $policy | jq -r '.[0].Arn')
+            if ["$policyArn" == "null"]
             then
               matrixOutput+="{\"lambdaName\":\"${filename}\"},";
             else
               fileContents=$(curl -s "https://raw.githubusercontent.com/charlenecoffman/definesafe-cf/main/src/Permissions/Lambdas/${filename}.json")
-              policyArn=$(echo $policy | jq -r '.[0].Arn')
               versionId=$(echo $policy | jq -r '.[0].DefaultVersionId')
-              echo $policyArn
-              echo $versionId
-              echo $filename
               policyContent=$(aws iam get-policy-version --policy-arn $policyArn --version-id $versionId --query 'PolicyVersion.Document' --output text)              
               if [ "$fileContents" != "$policyContent" ]
               then
