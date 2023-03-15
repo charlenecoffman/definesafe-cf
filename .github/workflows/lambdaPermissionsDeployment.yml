@@ -45,7 +45,7 @@ jobs:
               echo "$fileContents"
               versionId=$(echo $policy | jq -r '.[0].DefaultVersionId')
               echo "$versionId"
-              policyContent=$(aws iam get-policy-version --policy-arn $policyArn --version-id $versionId --query 'PolicyVersion.Document' --output text)
+              policyContent=$(aws iam get-policy-version --policy-arn $policyArn --version-id $versionId --query 'PolicyVersion.Document' --output json)
               echo "$policyContent"
               if [ "$fileContents" != "$policyContent" ]
               then
