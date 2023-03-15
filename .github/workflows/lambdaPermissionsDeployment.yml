@@ -1,12 +1,11 @@
 name: PermissionsDeployment
 on:
   push:
+  workflow_run:
+    workflows: ["CFDeployments"]
     branches: [main]
-  # workflow_run:
-  #   workflows: ["CFDeployments"]
-  #   branches: [main]
-  #   types: 
-  #     - completed
+    types: 
+      - completed
 
 jobs:
   createMatrix:
@@ -34,14 +33,10 @@ jobs:
           do
             f=$(echo "${i##*/}");
             filename=$(echo $f| cut  -d'.' -f 1);
-            echo $filename
             policy=$(aws iam list-policies --query "Policies[?PolicyName == '${filename}Permissions']" --output json --region "us-east-1")
             policyArn=$(echo $policy | jq -r '.[0].Arn')
-            echo $policyArn
-            echo "$policyArn"
             if [ "$policyArn" == "null" ]
             then
-              echo "got inside of then"
               matrixOutput+="{\"lambdaName\":\"${filename}\"},";
             else
               fileContents=$(curl -s "https://raw.githubusercontent.com/charlenecoffman/definesafe-cf/main/src/Permissions/Lambdas/${filename}.json")
