@@ -2,7 +2,7 @@ name: CFDeployments
 on:
   workflow_run:
     workflows: ["LambdaDeployments"]
-    branches: [main]
+    branches: [butt]
     types: 
       - completed
 

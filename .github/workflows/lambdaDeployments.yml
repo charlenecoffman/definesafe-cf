@@ -1,7 +1,7 @@
 name: LambdaDeployments
 on:
   push:
-    branches: [main]
+    branches: [butt]
 
 jobs:
   zipIfAnyChanges:
