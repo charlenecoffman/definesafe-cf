@@ -5,14 +5,10 @@
             "Sid": "VisualEditor0",
             "Effect": "Allow",
             "Action": [
-                "dynamodb:BatchGetItem",
-                "dynamodb:BatchWriteItem",
                 "dynamodb:PutItem",
-                "dynamodb:DescribeTable",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
-                "dynamodb:Query",
-                "dynamodb:UpdateItem"
+                "dynamodb:Query"
             ],
             "Resource": [
                 "arn:aws:dynamodb:*:042537148068:table/Plans/stream/*",
