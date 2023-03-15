@@ -37,13 +37,19 @@ jobs:
             policyArn=$(echo $policy | jq -r '.[0].Arn')
             if [ "$policyArn" == "null" ]
             then
+              echo "new permission policy"
               matrixOutput+="{\"lambdaName\":\"${filename}\"},";
             else
+              echo "old permission policy"
               fileContents=$(curl -s "https://raw.githubusercontent.com/charlenecoffman/definesafe-cf/main/src/Permissions/Lambdas/${filename}.json")
+              echo "$fileContents"
               versionId=$(echo $policy | jq -r '.[0].DefaultVersionId')
-              policyContent=$(aws iam get-policy-version --policy-arn $policyArn --version-id $versionId --query 'PolicyVersion.Document' --output text)              
+              echo "$versionId"
+              policyContent=$(aws iam get-policy-version --policy-arn $policyArn --version-id $versionId --query 'PolicyVersion.Document' --output text)
+              echo "$policyContent"
               if [ "$fileContents" != "$policyContent" ]
               then
+                echo "policy has changes"
                 matrixOutput+="{\"lambdaName\":\"${filename}\"},";
               fi
             fi
