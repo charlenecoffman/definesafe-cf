@@ -1,6 +1,7 @@
 #!/bin/bash
 
 function=$(aws lambda list-functions --query "Functions[?FunctionName == '$1'].FunctionName" --output text --region "us-east-1")
+echo $function
 if [[ -z "$function" ]]
 then
     exit 1
