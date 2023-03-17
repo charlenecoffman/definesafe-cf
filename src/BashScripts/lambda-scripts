@@ -1,11 +1,10 @@
 #!/bin/bash
 
 function has_changes {
-    function=$(aws lambda list-functions --query "Functions[?FunctionName == '$1'].FunctionName" --output text --region "us-east-1")
-    echo $1
-    if [[ -z "$function" ]]
+    functionName=$(aws lambda list-functions --query "Functions[?FunctionName == '$1'].FunctionName" --output text --region "us-east-1")
+    if [[ -z "$functionName" ]]
     then
-        echo 1
+        return 1
     else
         fileContents=$(curl -s "https://raw.githubusercontent.com/charlenecoffman/definesafe-cf/main/src/Lambdas/$1/index.js")
         contentsLocation=$(aws lambda get-function --function-name $1 --query 'Code.Location')
@@ -19,9 +18,9 @@ function has_changes {
         contentsOfLambda=$(<${dirName}/index.js)
         if [ "$fileContents" != "$contentsOfLambda" ]
         then
-            echo 2
+            return 2
         else
-            echo 3
+            return 3
         fi
     fi
 }
