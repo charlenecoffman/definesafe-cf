@@ -5,8 +5,7 @@ function has_changes {
     echo $1
     if [[ -z "$function" ]]
     then
-        echo "got here"
-        return 1
+        echo "got here 1"
     else
         fileContents=$(curl -s "https://raw.githubusercontent.com/charlenecoffman/definesafe-cf/main/src/Lambdas/$1/index.js")
         contentsLocation=$(aws lambda get-function --function-name $1 --query 'Code.Location')
@@ -20,9 +19,9 @@ function has_changes {
         contentsOfLambda=$(<${dirName}/index.js)
         if [ "$fileContents" != "$contentsOfLambda" ]
         then
-            return 1
+            echo "got here 2"
         else
-            return 0
+            echo "got here 3"
         fi
     fi
 }
