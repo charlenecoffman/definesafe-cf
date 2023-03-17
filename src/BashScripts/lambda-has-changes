@@ -1,27 +1,27 @@
 #!/bin/bash
 
-echo "test this inner"
-function=$(aws lambda list-functions --query "Functions[?FunctionName == '$1'].FunctionName" --output text --region "us-east-1")
-echo $1
-if [[ -z "$function" ]]
-then
-    exit 1
-else
-    fileContents=$(curl -s "https://raw.githubusercontent.com/charlenecoffman/definesafe-cf/main/src/Lambdas/$1/index.js")
-    contentsLocation=$(aws lambda get-function --function-name $1 --query 'Code.Location')
-    contentsLocation="${contentsLocation%\"}"
-    contentsLocation="${contentsLocation#\"}"
-    dirName="../deleteLater/$1"
-    mkdir -p ../deleteLater
-    mkdir $dirName
-    curl -s $contentsLocation --output ${dirName}/$1_currentLambda.zip
-    unzip -qq -d ${dirName} -o ${dirName}/$1_currentLambda.zip
-    contentsOfLambda=$(<${dirName}/index.js)
-    if [ "$fileContents" != "$contentsOfLambda" ]
-    then
-        exit 1
-    else
-        exit 0
-    fi
-fi
+# echo "test this inner"
+# function=$(aws lambda list-functions --query "Functions[?FunctionName == '$1'].FunctionName" --output text --region "us-east-1")
+# echo $1
+# if [[ -z "$function" ]]
+# then
+#     exit 1
+# else
+#     fileContents=$(curl -s "https://raw.githubusercontent.com/charlenecoffman/definesafe-cf/main/src/Lambdas/$1/index.js")
+#     contentsLocation=$(aws lambda get-function --function-name $1 --query 'Code.Location')
+#     contentsLocation="${contentsLocation%\"}"
+#     contentsLocation="${contentsLocation#\"}"
+#     dirName="../deleteLater/$1"
+#     mkdir -p ../deleteLater
+#     mkdir $dirName
+#     curl -s $contentsLocation --output ${dirName}/$1_currentLambda.zip
+#     unzip -qq -d ${dirName} -o ${dirName}/$1_currentLambda.zip
+#     contentsOfLambda=$(<${dirName}/index.js)
+#     if [ "$fileContents" != "$contentsOfLambda" ]
+#     then
+#         exit 1
+#     else
+#         exit 0
+#     fi
+# fi
 echo $1
