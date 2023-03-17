@@ -25,8 +25,7 @@ jobs:
           cd src/Lambdas
           for i in */
           do
-            hasChanges=$(has_changes "${i%/}")
-            if [[ $hasChanges -eq 1 ]]
+            if has_changes "${i%/}"
             then
               (cd "$i"; zip -r "../${i%/}.zip" . -qq)
               matrixOutput+="{\"file\":\"${i%/}\"},";
