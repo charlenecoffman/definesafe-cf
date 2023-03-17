@@ -21,7 +21,8 @@ jobs:
         id: zipfunctions
         run: |
           source ./src/BashScripts/lambda-scripts
-          matrixOutput=$(zip_any_with_changes "./src/Lambdas")          
+          matrixOutput=""
+          matrixOutput=$(zip_any_with_changes "./src/Lambdas")
           if [[ $matrixOutput != "" ]]
           then
             matrixOutput="{\"include\":[${matrixOutput}]}"
