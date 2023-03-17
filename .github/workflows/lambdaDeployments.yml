@@ -27,7 +27,7 @@ jobs:
           for i in */
           do
             echo "test this 2"
-            hasChanges=$(../BashScripts/lambda-has-changes "${i%/}")
+            hasChanges=$(../../src/BashScripts/lambda-has-changes "${i%/}")
             echo "test this 3"
             if [[ $hasChanges -eq 1 ]]
             then
