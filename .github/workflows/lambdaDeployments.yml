@@ -21,11 +21,13 @@ jobs:
         id: zipfunctions
         run: |
           source ./src/BashScripts/lambda-scripts
+          echo "here 1"
           matrixOutput=""
           cd src/Lambdas
           for i in */
           do
             hasChanges=$(has_changes "${i%/}")
+            echo "here 2"
             echo $hasChanges
             if [[ $hasChanges -eq 1 ]]
             then
