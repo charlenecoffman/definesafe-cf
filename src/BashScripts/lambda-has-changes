@@ -1,5 +1,6 @@
 #!/bin/bash
 
+echo "test this inner"
 function=$(aws lambda list-functions --query "Functions[?FunctionName == '$1'].FunctionName" --output text --region "us-east-1")
 echo $1
 if [[ -z "$function" ]]
