@@ -31,7 +31,6 @@ function zip_any_with_changes {
     do
     if $(has_changes "${i%/}")
     then
-        echo "whatever" >$(tty)
         (cd "$i"; zip -r "../${i%/}.zip" . -qq)
         matrixOutput+="{\"file\":\"${i%/}\"},";
     fi
