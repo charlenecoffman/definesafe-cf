@@ -20,7 +20,7 @@ exports.handler = async (event, context, callback) => {
         "Triggers": newPlan.Triggers
       }
     };
-    
+    console.log("Resrt")
     await documentClient.put(params)
       .promise()
       .then(resp => {
