@@ -25,28 +25,11 @@ jobs:
           cd src/Lambdas
           for i in */
           do
-            ../BashScripts/lambda-has-changes "${i%/}"
-            function=$(aws lambda list-functions --query "Functions[?FunctionName == '${i%/}'].FunctionName" --output text --region "us-east-1")
-            if [[ -z "$function" ]]
+            hasChanges=$(../BashScripts/lambda-has-changes "${i%/}")
+            if [[ $hasChanges -eq 1 ]]
             then
               (cd "$i"; zip -r "../${i%/}.zip" . -qq)
               matrixOutput+="{\"file\":\"${i%/}\"},";
-            else
-              fileContents=$(curl -s "https://raw.githubusercontent.com/charlenecoffman/definesafe-cf/main/src/Lambdas/${i%/}/index.js")
-              contentsLocation=$(aws lambda get-function --function-name ${i%/} --query 'Code.Location')
-              contentsLocation="${contentsLocation%\"}"
-              contentsLocation="${contentsLocation#\"}"
-              dirName="../deleteLater/${i%/}"
-              mkdir -p ../deleteLater
-              mkdir $dirName
-              curl -s $contentsLocation --output ${dirName}/${i%/}_currentLambda.zip
-              unzip -qq -d ${dirName} -o ${dirName}/${i%/}_currentLambda.zip
-              contentsOfLambda=$(<${dirName}/index.js)
-              if [ "$fileContents" != "$contentsOfLambda" ]
-              then
-                (cd "$i"; zip -r "../${i%/}.zip" . -qq)
-                matrixOutput+="{\"file\":\"${i%/}\"},";
-              fi
             fi
           done
           if [[ $matrixOutput != "" ]]
