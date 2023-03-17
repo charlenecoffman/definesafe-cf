@@ -27,7 +27,7 @@ function has_changes {
 
 function zip_any_with_changes {
     matrixOutput=""
-    cd $1
+    cd "$1"
     for i in */
     do
     if $(has_changes "${i%/}")
