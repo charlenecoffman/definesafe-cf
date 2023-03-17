@@ -25,7 +25,7 @@ jobs:
           cd src/Lambdas
           for i in */
           do
-            hasChanges=$(../src/BashScripts/lambda-has-changes "${i%/}")
+            hasChanges=$(../../src/BashScripts/lambda-has-changes "${i%/}")
             if [[ $hasChanges -eq 1 ]]
             then
               (cd "$i"; zip -r "../${i%/}.zip" . -qq)
