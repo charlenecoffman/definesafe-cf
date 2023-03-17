@@ -22,10 +22,13 @@ jobs:
         run: |
           chmod +x src/BashScripts/lambda-has-changes
           matrixOutput=""
+          echo "test this 1"
           cd src/Lambdas
           for i in */
           do
+            echo "test this 2"
             hasChanges=$(../BashScripts/lambda-has-changes "${i%/}")
+            echo "test this 3"
             if [[ $hasChanges -eq 1 ]]
             then
               (cd "$i"; zip -r "../${i%/}.zip" . -qq)
