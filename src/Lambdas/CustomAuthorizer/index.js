@@ -10,5 +10,6 @@ module.exports.handler = async (event, context, callback) => {
       console.log(err);
       return context.fail("Unauthorized");
   }
+  console.log("test");
   return data;
 };
