@@ -5,7 +5,7 @@ function has_changes {
     echo $1
     if [[ -z "$function" ]]
     then
-        console.log("got here")
+        echo "got here"
         return 1
     else
         fileContents=$(curl -s "https://raw.githubusercontent.com/charlenecoffman/definesafe-cf/main/src/Lambdas/$1/index.js")
