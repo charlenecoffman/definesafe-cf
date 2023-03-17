@@ -21,11 +21,11 @@ jobs:
         id: zipfunctions
         run: |
           chmod +x src/BashScripts/lambda-has-changes
-          ./src/BashScripts/lambda-has-changes "test"
           matrixOutput=""
           cd src/Lambdas
           for i in */
           do
+            ./src/BashScripts/lambda-has-changes "$i"
             function=$(aws lambda list-functions --query "Functions[?FunctionName == '${i%/}'].FunctionName" --output text --region "us-east-1")
             if [[ -z "$function" ]]
             then
