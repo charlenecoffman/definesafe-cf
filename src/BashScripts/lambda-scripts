@@ -3,25 +3,25 @@
 function has_changes {
     function=$(aws lambda list-functions --query "Functions[?FunctionName == '$1'].FunctionName" --output text --region "us-east-1")
     echo $1
-    # if [[ -z "$function" ]]
-    # then
-    #     return 1
-    # else
-    #     fileContents=$(curl -s "https://raw.githubusercontent.com/charlenecoffman/definesafe-cf/main/src/Lambdas/$1/index.js")
-    #     contentsLocation=$(aws lambda get-function --function-name $1 --query 'Code.Location')
-    #     contentsLocation="${contentsLocation%\"}"
-    #     contentsLocation="${contentsLocation#\"}"
-    #     dirName="../deleteLater/$1"
-    #     mkdir -p ../deleteLater
-    #     mkdir $dirName
-    #     curl -s $contentsLocation --output ${dirName}/$1_currentLambda.zip
-    #     unzip -qq -d ${dirName} -o ${dirName}/$1_currentLambda.zip
-    #     contentsOfLambda=$(<${dirName}/index.js)
-    #     if [ "$fileContents" != "$contentsOfLambda" ]
-    #     then
-    #         return 1
-    #     else
-    #         return 0
-    #     fi
-    # fi
+    if [[ -z "$function" ]]
+    then
+        return true
+    else
+        fileContents=$(curl -s "https://raw.githubusercontent.com/charlenecoffman/definesafe-cf/main/src/Lambdas/$1/index.js")
+        contentsLocation=$(aws lambda get-function --function-name $1 --query 'Code.Location')
+        contentsLocation="${contentsLocation%\"}"
+        contentsLocation="${contentsLocation#\"}"
+        dirName="../deleteLater/$1"
+        mkdir -p ../deleteLater
+        mkdir $dirName
+        curl -s $contentsLocation --output ${dirName}/$1_currentLambda.zip
+        unzip -qq -d ${dirName} -o ${dirName}/$1_currentLambda.zip
+        contentsOfLambda=$(<${dirName}/index.js)
+        if [ "$fileContents" != "$contentsOfLambda" ]
+        then
+            return true
+        else
+            return false
+        fi
+    fi
 }
