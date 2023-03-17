@@ -20,6 +20,8 @@ jobs:
       - name: Zip up each function
         id: zipfunctions
         run: |
+          chmod +x src/BashScripts/lambda-has-changes
+          ./src/BashScripts/lambda-has-changes "test"
           matrixOutput=""
           cd src/Lambdas
           for i in */
