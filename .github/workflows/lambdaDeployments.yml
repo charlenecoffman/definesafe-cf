@@ -20,12 +20,12 @@ jobs:
       - name: Zip up each function
         id: zipfunctions
         run: |
-          chmod +x src/BashScripts/lambda-has-changes
+          source ./src/BashScripts/lambda-has-changes
           matrixOutput=""
           cd src/Lambdas
           for i in */
           do
-            hasChanges=$(../../src/BashScripts/lambda-has-changes "${i%/}")
+            hasChanges=$(has_changes "${i%/}")
             echo $hasChanges
             if [[ $hasChanges -eq 1 ]]
             then
