@@ -36,9 +36,6 @@ jobs:
           then
             matrixOutput="{\"include\":[${matrixOutput}]}"
             echo "::set-output name=matrix::${matrixOutput}"
-            echo "Created matrix: '${matrixOutput}"
-          else
-            echo "Empty matrix"
           fi
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
