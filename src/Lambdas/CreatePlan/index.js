@@ -4,7 +4,6 @@ var documentClient = new aws.DynamoDB.DocumentClient();
 
 exports.handler = async (event, context, callback) => {
     const response ={
-        "statusCode": 201,
         "headers": {
             "Content-Type": "*/*"
         }
@@ -21,14 +20,17 @@ exports.handler = async (event, context, callback) => {
         "Triggers": newPlan.Triggers
       }
     };
+    
     await documentClient.put(params)
       .promise()
       .then(resp => {
         response.body = JSON.stringify(params);
+        response.statusCode = 201;
         callback(null, response);
       })
       .catch(err => {
         response.body = JSON.stringify(err);
+        response.statusCode = 500;
         callback(null, response)
       });
 }
