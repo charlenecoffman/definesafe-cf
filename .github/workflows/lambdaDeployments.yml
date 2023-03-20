@@ -21,7 +21,7 @@ jobs:
         id: zipfunctions
         run: |
           source ./src/BashScripts/lambda-scripts
-          lambdaListForMatrix="files={\"include\":["
+          lambdaList="files={\"include\":["
           zip_any_with_changes "./src/Lambdas"
           echo "${lambdaList}]}" >> $GITHUB_OUTPUT
         env:
