@@ -2,11 +2,11 @@
 
 function create_matrix_output {
     arr=("$@")
-    matrixOutput="files={\"include\":["
+    matrixOutput="files=["
     for i in "${arr[@]}"
     do
         matrixOutput+="\"$i\","
     done
-    matrixOutput="${matrixOutput%,}]}"
+    matrixOutput="${matrixOutput%,}]"
     echo $matrixOutput>&2
 }
