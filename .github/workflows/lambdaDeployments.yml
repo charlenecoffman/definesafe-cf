@@ -10,7 +10,7 @@ jobs:
         files: ${{ toJSON(steps.zipIfAnyChanges.outputs.file) }}
     steps:
       - name: Setup AWS CLI
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           AWS-ACCESS-KEY-ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS-SECRET-ACCESS-KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -38,7 +38,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: zipIfAnyChanges
-    if: ${{ needs.zipIfAnyChanges.outputs.files != '' }}
+    # if: ${{ needs.zipIfAnyChanges.outputs.files != '' }}
     strategy:
       matrix:
         file: ${{ fromJSON(needs.zipIfAnyChanges.outputs.files) }}
@@ -48,7 +48,7 @@ jobs:
         with:
           path: ./
       - name: Setup AWS CLI
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           AWS-ACCESS-KEY-ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS-SECRET-ACCESS-KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
