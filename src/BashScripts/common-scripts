@@ -1,5 +1,6 @@
 #!/bin/bash
 
-function create_matrix {
+function create_matrix_output {
     echo $1>&2
+    
 }
