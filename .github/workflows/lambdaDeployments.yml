@@ -38,9 +38,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: zipIfAnyChanges    
-    if: ${{ needs.zipIfAnyChanges.outputs.matrix != '' && fromJSON(needs.zipIfAnyChanges.outputs.matrix) != '[]' }}
+    if: ${{ fromJSON(needs.zipIfAnyChanges.outputs.file) != ''}}
     strategy:
-      matrix: ${{ fromJSON(needs.zipIfAnyChanges.outputs.matrix) }}
+      matrix: ${{ fromJSON(needs.zipIfAnyChanges.outputs.file) }}
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v2
