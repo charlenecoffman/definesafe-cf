@@ -7,7 +7,7 @@ jobs:
   zipIfAnyChanges:
     runs-on: ubuntu-latest
     outputs:
-        files: ${{ toJSON(steps.zipfunctions.outputs.files) }}
+        files: ${{ steps.zipfunctions.outputs.files }}
     steps:
       - name: Setup AWS CLI
         uses: aws-actions/configure-aws-credentials@v2
@@ -46,7 +46,7 @@ jobs:
     # if: ${{ fromJSON(needs.zipIfAnyChanges.outputs.files) != '' }}
     strategy:
       matrix:
-        file: ${{ needs.zipIfAnyChanges.outputs.files }}
+        file: ${{ fromJson(needs.zipIfAnyChanges.outputs.files) }}
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v2
