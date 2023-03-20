@@ -7,6 +7,7 @@ module.exports.handler = async (event, context, callback) => {
     data = await lib.authenticate(event);
   }
   catch (err) {
+      console.log(err);
       return context.fail("Unauthorized");
   }
   return data;

@@ -1,8 +1,9 @@
 #!/bin/bash
 
 function create_matrix_output {
-    arr=("$@")
     matrixOutput="$1=["
+    shift
+    arr=("$@")
     for i in "${arr[@]}"
     do
         matrixOutput+="\"$i\","
