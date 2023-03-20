@@ -16,7 +16,7 @@ jobs:
           AWS-SECRET-ACCESS-KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS-REGION: us-east-1
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Zip up each function
         id: zipfunctions
         run: |
