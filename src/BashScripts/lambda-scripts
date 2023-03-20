@@ -32,9 +32,7 @@ function zip_any_with_changes {
     if $(has_changes "${i%/}")
     then
         (cd "$i"; zip -r "../${i%/}.zip" . -qq)
-        matrixOutput+="{\"file\":\"${i%/}\"},";
+        echo "file=${i%/}" >> $GITHUB_OUTPUT
     fi
     done
-    echo "$matrixOutput">&2
-    echo "$matrixOutput"
 }
