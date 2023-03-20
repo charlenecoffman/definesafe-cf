@@ -33,11 +33,7 @@ function zip_any_with_changes {
     then # zip it up and put in the matrix output
         echo "Changes found for ${i%/}" >&2
         (cd "$i"; zip -r "../${i%/}.zip" . -qq)
-        if "GITHUB_OUTPUT" in os.environ
-        then
-            echo "Adding to output" >&2
-            echo "files=${i%/}" >> $GITHUB_OUTPUT
-        fi
+        echo "files=${i%/}" >> $GITHUB_OUTPUT
     fi
     done
 }
