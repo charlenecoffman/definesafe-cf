@@ -1,13 +1,12 @@
 #!/bin/bash
 
 function create_matrix_output {
-    echo $1>&2
     arr=("$@")
     matrixOutput="files={\"include\":["
     for i in "${arr[@]}"
     do
-        matrixOutput+="$i,"
+        matrixOutput+="\"$i\","
     done
-    matrixOut="${matrixOutput%,}]}"
-    echo $matrixOut>&2
+    matrixOutput="${matrixOutput%,}]}"
+    echo $matrixOutput>&2
 }

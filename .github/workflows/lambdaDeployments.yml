@@ -24,7 +24,7 @@ jobs:
           source ./src/BashScripts/common-scripts
           lambdaList=()
           zip_any_with_changes "./src/Lambdas"
-          matrixOutput=$(create_matrix_output "${lambdaList[@]}")
+          create_matrix_output "${lambdaList[@]}"
           echo $matrixOutput >> $GITHUB_OUTPUT
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
