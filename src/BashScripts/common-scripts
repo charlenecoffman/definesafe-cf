@@ -2,10 +2,10 @@
 
 function create_matrix_output {
     echo $1>&2
-    matrixOutput="files=["
+    matrixOutput="files={\"include\":["
     for i in "${1[@]}"
     do
         matrixOutput+="$i,"
     done
-    matrixOut=${matrixOutput%,}
+    matrixOut="${matrixOutput%,}]}"
 }
