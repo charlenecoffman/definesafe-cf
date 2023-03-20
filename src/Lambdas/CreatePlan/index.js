@@ -17,7 +17,7 @@ exports.handler = async (event, context, callback) => {
         'Plan_Id':  uuid(),
         'User_Id': newPlan.User_Id,
         "Coping_Skills": newPlan.Coping_Skills,
-        "Triggers": newPlan.Triggers
+        "Triggers": newPlan.Triggers,
       }
     };
     
