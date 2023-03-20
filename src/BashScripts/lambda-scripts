@@ -33,7 +33,7 @@ function zip_any_with_changes {
     then # zip it up and put in the matrix output
         echo "Changes found for ${i%/}" >&2
         (cd "$i"; zip -r "../${i%/}.zip" . -qq)
-        lambdaList+=(${i%/})
+        lambdaList+=("${i%/}")
     fi
     done
 }
