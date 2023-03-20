@@ -31,11 +31,8 @@ function zip_any_with_changes {
     do
     if $(has_changes "${i%/}")
     then # zip it up and put in the matrix output
-        echo "Changes found for ${i%/}" >&2
         (cd "$i"; zip -r "../${i%/}.zip" . -qq)
         lambdaList+=("${i%/}")
-    else
-        echo "No changes for ${i%/}" >&2
     fi
     done
 }

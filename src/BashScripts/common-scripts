@@ -2,7 +2,7 @@
 
 function create_matrix_output {
     arr=("$@")
-    matrixOutput="files=["
+    matrixOutput="$1=["
     for i in "${arr[@]}"
     do
         matrixOutput+="\"$i\","
