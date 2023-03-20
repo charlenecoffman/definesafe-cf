@@ -45,7 +45,7 @@ jobs:
     # if: ${{ fromJSON(needs.zipIfAnyChanges.outputs.files) != '' }}
     strategy:
       matrix:
-        file: ${{ fromJSON(needs.zipIfAnyChanges.outputs.files) }}
+        file: ${{ fromJson(needs.zipIfAnyChanges.outputs.files) }}
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v2
