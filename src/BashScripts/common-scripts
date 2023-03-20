@@ -2,8 +2,9 @@
 
 function create_matrix_output {
     echo $1>&2
+    arr=("$@")
     matrixOutput="files={\"include\":["
-    for i in "${1[@]}"
+    for i in "${arr[@]}"
     do
         matrixOutput+="$i,"
     done
