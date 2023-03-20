@@ -7,7 +7,7 @@ jobs:
   zipIfAnyChanges:
     runs-on: ubuntu-latest
     outputs:
-        files: ${{ toJSON(steps.zipIfAnyChanges.outputs.files) }}
+        files: ${{ toJSON(steps.zipfunctions.outputs.files) }}
     steps:
       - name: Setup AWS CLI
         uses: aws-actions/configure-aws-credentials@v2
