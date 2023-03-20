@@ -33,6 +33,8 @@ function zip_any_with_changes {
     then # zip it up and put in the matrix output
         (cd "$i"; zip -r "../${i%/}.zip" . -qq)
         echo "file=${i%/}" >> $GITHUB_OUTPUT
+    else
+        echo "No changes for ${i%/}">>&2
     fi
     done
 }
