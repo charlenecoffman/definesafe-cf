@@ -8,4 +8,5 @@ function create_matrix_output {
         matrixOutput+="$i,"
     done
     matrixOut="${matrixOutput%,}]}"
+    echo $matrixOut>&2
 }
