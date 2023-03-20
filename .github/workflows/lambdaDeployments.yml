@@ -21,9 +21,9 @@ jobs:
         id: zipfunctions
         run: |
           source ./src/BashScripts/lambda-scripts
-          lambdaList="["
+          lambdaListForMatrix="files={\"include\":["
           zip_any_with_changes "./src/Lambdas"
-          echo "files=${lambdaList}]" >> $GITHUB_OUTPUT
+          echo "${lambdaList}]}" >> $GITHUB_OUTPUT
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
