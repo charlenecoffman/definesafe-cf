@@ -23,7 +23,7 @@ exports.handler = async (event, context, callback) => {
     
     await documentClient.put(params)
       .promise()
-      .then(resp => {
+      .then(() => {
         response.body = JSON.stringify(params);
         response.statusCode = 201;
         callback(null, response);

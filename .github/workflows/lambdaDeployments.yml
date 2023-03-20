@@ -26,7 +26,6 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Upload Zips to artifact container
-        if: ${{ toJSON(steps.zipIfAnyChanges.outputs.file) != '' }}
         uses: actions/upload-artifact@master
         with:
           name: zips

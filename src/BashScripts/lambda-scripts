@@ -2,10 +2,10 @@
 
 function has_changes {
     functionName=$(aws lambda list-functions --query "Functions[?FunctionName == '$1'].FunctionName" --output text --region "us-east-1")
-    if [[ -z "$functionName" ]]
-    then
+    if [[ -z "$functionName" ]] # if the lambda does not exist
+    then # return true (which looks like "return")
         return
-    else
+    else # else check to see if the index file has changed - TODO: make this also check package.json or any .js files?
         fileContents=$(curl -s "https://raw.githubusercontent.com/charlenecoffman/definesafe-cf/main/src/Lambdas/$1/index.js")
         contentsLocation=$(aws lambda get-function --function-name $1 --query 'Code.Location')
         contentsLocation="${contentsLocation%\"}"
@@ -30,7 +30,7 @@ function zip_any_with_changes {
     for i in */
     do
     if $(has_changes "${i%/}")
-    then
+    then # zip it up and put in the matrix output
         (cd "$i"; zip -r "../${i%/}.zip" . -qq)
         echo "file=${i%/}" >> $GITHUB_OUTPUT
     fi
