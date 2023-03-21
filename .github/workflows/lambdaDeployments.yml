@@ -40,6 +40,12 @@ jobs:
         with:
           name: permissions
           path: src/Permissions/RolePolicies/*.json
+  sometest:
+    runs-on: ubuntu-latest
+    needs: zipIfAnyChanges
+    steps:
+      - run: |
+          echo ${{ needs.zipIfAnyChanges.outputs.files }}
   deploy:
     runs-on: ubuntu-latest
     needs: zipIfAnyChanges
