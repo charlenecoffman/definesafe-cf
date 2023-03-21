@@ -43,7 +43,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: zipIfAnyChanges
-    # if: ${{ fromJSON(needs.zipIfAnyChanges.outputs.files) != '' }}
+    if: ${{ fromJson(needs.zipIfAnyChanges.outputs.files) != '' }}
     strategy:
       matrix:
         file: ${{ fromJson(needs.zipIfAnyChanges.outputs.files) }}
