@@ -47,11 +47,11 @@ jobs:
       - run: |
           echo ${{ needs.zipIfAnyChanges.outputs.files }}
           echo ${{ fromJson(needs.zipIfAnyChanges.outputs.files) != '[]' }}
-          echo ${{ needs.zipIfAnyChanges.outputs.files != '[]' }}
+          echo 
   deploy:
     runs-on: ubuntu-latest
     needs: zipIfAnyChanges
-    if: ${{ fromJson(needs.zipIfAnyChanges.outputs.files) != '[]' }}
+    if: ${{ needs.zipIfAnyChanges.outputs.files != '[]' }}
     strategy:
       matrix:
         file: ${{ fromJson(needs.zipIfAnyChanges.outputs.files) }}
