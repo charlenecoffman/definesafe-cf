@@ -36,3 +36,23 @@ function zip_any_with_changes {
     fi
     done
 }
+
+function create_role_and_function {
+    role=$(create_role $1)
+    echo $role > returnObject.json
+    sleep 10s
+    create_lambda $1 returnObject.json $2
+}
+
+function create_role {    
+    if [ $1 == 'CustomAuthorizer' ]
+    then
+        echo $(aws iam create-role --role-name "AWSLambdaBasicExecutionRole-$1" --assume-role-policy-document file://permissions/CustomAuthRolePolicy.json --region "us-east-1");
+    else
+        echo $(aws iam create-role --role-name "AWSLambdaBasicExecutionRole-$1" --assume-role-policy-document file://permissions/LambdaExecutionRolePolicy.json --region "us-east-1");
+    fi
+}
+
+function create_lambda {
+    aws lambda create-function --function-name $1 --runtime "nodejs12.x" --role "$(jq -r '.Role.Arn' $2)" --handler "index.handler" --zip-file fileb://zips/$1.zip --region "us-east-1" --tags Solution="$3"
+}

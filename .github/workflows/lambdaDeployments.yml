@@ -70,6 +70,8 @@ jobs:
         run: |
           role=$(aws lambda list-functions --query 'Functions[?FunctionName == `${{ matrix.file }}`].Role' --output text --region "us-east-1")
           echo "::set-env name=ROLE::$role"
+          echo $role == ''
+          echo $role != ''
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -77,15 +79,7 @@ jobs:
       - name: Create Role & Function If Doesn't Exist
         if: env.ROLE == ''
         run: |
-          if [ $matrix.file == 'CustomAuthorizer' ]
-          then
-            role=$(aws iam create-role --role-name "AWSLambdaBasicExecutionRole-${{ matrix.file }}" --assume-role-policy-document file://permissions/CustomAuthRolePolicy.json --region "us-east-1");
-          else
-            role=$(aws iam create-role --role-name "AWSLambdaBasicExecutionRole-${{ matrix.file }}" --assume-role-policy-document file://permissions/LambdaExecutionRolePolicy.json --region "us-east-1");
-          fi
-          echo $role > returnObject.json
-          sleep 10s
-          aws lambda create-function --function-name ${{ matrix.file }} --runtime "nodejs12.x" --role "$(jq -r '.Role.Arn' returnObject.json)" --handler "index.handler" --zip-file fileb://zips/${{ matrix.file }}.zip --region "us-east-1" --tags Solution=DefineSafe
+          create_role_and_function ${{ matrix.file }}
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
