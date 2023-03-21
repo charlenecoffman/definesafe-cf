@@ -48,6 +48,7 @@ jobs:
           echo ${{ needs.zipIfAnyChanges.outputs.files }}
           echo ${{ fromJson(needs.zipIfAnyChanges.outputs.files) != '[]' }}
           echo ${{ fromJson(needs.zipIfAnyChanges.outputs.files) == '[]' }}
+          echo ${{ fromJson(needs.zipIfAnyChanges.outputs.files) == [] }}
   deploy:
     runs-on: ubuntu-latest
     needs: zipIfAnyChanges
