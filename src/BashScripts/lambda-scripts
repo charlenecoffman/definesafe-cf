@@ -54,5 +54,5 @@ function create_role {
 }
 
 function create_lambda {
-    aws lambda create-function --function-name $1 --runtime "nodejs12.x" --role "$(jq -r '.Role.Arn' $2)" --handler "index.handler" --zip-file fileb://zips/$1.zip --region "us-east-1" --tags Solution="$3"
+    aws lambda create-function --function-name $1 --runtime "nodejs12.x" --role "$(jq -r '.Role.Arn' $2)" --handler "index.handler" --zip-file fileb://zips/$1.zip --region "us-east-1" --tags Solution="$3" --environment Variables="{JWKS_URI=https://definesafe.us.auth0.com/.well-known/jwks.json,AUDIENCE=https://api.definesafe.com,TOKEN_ISSUER=https://definesafe.us.auth0.com/}"
 }
