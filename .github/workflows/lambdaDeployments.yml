@@ -35,6 +35,11 @@ jobs:
         with:
           name: zips
           path: src/Lambdas/*.zip
+      - name: Upload Scripts to artifact container
+        uses: actions/upload-artifact@master
+        with:
+          name: BashScripts
+          path: src/BashScripts/*
       - name: Upload Permissions Docs to artifact container
         uses: actions/upload-artifact@master
         with:
@@ -62,8 +67,6 @@ jobs:
         run: |
           role=$(aws lambda list-functions --query 'Functions[?FunctionName == `${{ matrix.file }}`].Role' --output text --region "us-east-1")
           echo "::set-env name=ROLE::$role"
-          echo $role == ''
-          echo $role != ''
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -71,7 +74,7 @@ jobs:
       - name: Create Role & Function If Doesn't Exist
         if: env.ROLE == ''
         run: |
-          source ./src/BashScripts/lambda-scripts
+          source ./BashScripts/lambda-scripts
           create_role_and_function ${{ matrix.file }}
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
