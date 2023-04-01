@@ -96,7 +96,8 @@ Resources:
       - PlanResource
     Type: AWS::ApiGateway::Method
     Properties:
-      AuthorizationType: NONE
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref Authorizer
       RestApiId:
         Ref: DefineSafeApi
       ResourceId:
