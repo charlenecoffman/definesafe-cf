@@ -183,7 +183,8 @@ Resources:
       - PlanResource
     Type: 'AWS::ApiGateway::Method'
     Properties:
-      AuthorizationType: NONE
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref Authorizer
       HttpMethod: PUT
       Integration:
         Type: AWS_PROXY
@@ -227,7 +228,8 @@ Resources:
       - PlanResource
     Type: 'AWS::ApiGateway::Method'
     Properties:
-      AuthorizationType: NONE
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref Authorizer
       HttpMethod: POST
       Integration:
         Type: AWS_PROXY
