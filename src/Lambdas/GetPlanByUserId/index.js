@@ -10,8 +10,7 @@ exports.handler = async (event, context, callback) => {
     };
 
     const qsParams = event.queryStringParameters;
-    const authToken = event.headers["authorization"];
-
+    
     var params = {
       TableName: 'Plans',
       IndexName: 'User_Id',
