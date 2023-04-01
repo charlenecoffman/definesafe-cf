@@ -78,7 +78,7 @@ jobs:
           echo "::set-env name=POLICY::$policy"
       - name: Checkout Code
         uses: actions/checkout@v2
-      - name: Create Plan Permissions If Does Not Exist
+      - name: Create Permissions If Does Not Exist
         if: env.POLICY == ''
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
@@ -89,7 +89,7 @@ jobs:
           echo $policy > returnObject.json
           sleep 10s
           aws iam attach-role-policy --role-name "AWSLambdaBasicExecutionRole-${{matrix.lambdaName}}" --policy-arn "$(jq -r '.Policy.Arn' returnObject.json)"
-      - name: Update Plan Permissions If It Exists
+      - name: Update Permissions If It Exists
         if: env.POLICY != ''
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"

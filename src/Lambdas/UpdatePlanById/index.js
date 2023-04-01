@@ -26,7 +26,7 @@ exports.handler = async (event, context, callback) => {
     await documentClient.update(params)
       .promise()
       .then(resp => {
-        response.body = JSON.stringify(resp);
+        response.body = JSON.stringify(updatePlan);
         callback(null, response);
       })
       .catch(err => {
