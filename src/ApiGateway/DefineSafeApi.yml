@@ -45,6 +45,7 @@ Resources:
             - ':'
             - Ref: DefineSafeApi
             - /*
+# Custom Authorizer used by the entire API
   Authorizer:
     Type : 'AWS::ApiGateway::Authorizer'
     Properties:
@@ -62,7 +63,7 @@ Resources:
       Name: jwt-rsa-custom-authorizer
       RestApiId: 
         Ref: DefineSafeApi
-# Resources
+# Api Resources section
   PlanResource:
     Type: 'AWS::ApiGateway::Resource'
     Properties:
@@ -73,6 +74,40 @@ Resources:
           - DefineSafeApi
           - RootResourceId
       PathPart: plan
+# Resource Options for CORS
+  PlanOptions:
+    DependsOn:
+      - PlanResource
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      RestApiId:
+        Ref: DefineSafeApi
+      ResourceId:
+        Ref: PlanResource
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+            method.response.header.Access-Control-Allow-Methods: "'GET,POST,PUT,OPTIONS'" #This list must include all calls being made to this resource
+            method.response.header.Access-Control-Allow-Origin: "'*'"
+          ResponseTemplates:
+            application/json: ''
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        Type: MOCK
+      MethodResponses:
+      - StatusCode: 200
+        ResponseModels:
+          application/json: 'Empty'
+        ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: false
+            method.response.header.Access-Control-Allow-Methods: false
+            method.response.header.Access-Control-Allow-Origin: false
+# Methods below here include a lambda permission and a method definition
 # GetPlanByUserId
   LambdaPermissions:
     Type: 'AWS::Lambda::Permission'
@@ -90,39 +125,6 @@ Resources:
             - ':'
             - Ref: DefineSafeApi
             - /*
-  PlanOptions:
-    DependsOn:
-      - LambdaPermissions
-      - PlanResource
-    Type: AWS::ApiGateway::Method
-    Properties:
-      AuthorizationType: NONE
-      RestApiId:
-        Ref: DefineSafeApi
-      ResourceId:
-        Ref: PlanResource
-      HttpMethod: OPTIONS
-      Integration:
-        IntegrationResponses:
-        - StatusCode: 200
-          ResponseParameters:
-            method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-            method.response.header.Access-Control-Allow-Methods: "'GET,POST,PUT,OPTIONS'"
-            method.response.header.Access-Control-Allow-Origin: "'*'"
-          ResponseTemplates:
-            application/json: ''
-        PassthroughBehavior: WHEN_NO_MATCH
-        RequestTemplates:
-          application/json: '{"statusCode": 200}'
-        Type: MOCK
-      MethodResponses:
-      - StatusCode: 200
-        ResponseModels:
-          application/json: 'Empty'
-        ResponseParameters:
-            method.response.header.Access-Control-Allow-Headers: false
-            method.response.header.Access-Control-Allow-Methods: false
-            method.response.header.Access-Control-Allow-Origin: false
   PlanRequest:
     DependsOn: 
       - LambdaPermissions
