@@ -19,7 +19,7 @@ Resources:
           ResourcePath: /*
       RestApiId:
         Ref: DefineSafeApi
-      StageName: LATEST
+      StageName: v1
   ApiDeployment:
     Type: 'AWS::ApiGateway::Deployment'
     DependsOn:
