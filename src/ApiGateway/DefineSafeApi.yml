@@ -27,7 +27,6 @@ Resources:
     Properties:
       RestApiId:
         Ref: DefineSafeApi
-      StageName: DummyStage
 # Authentication
   LambdaPermissionForAuth:
     Type: 'AWS::Lambda::Permission'
