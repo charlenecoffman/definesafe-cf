@@ -73,6 +73,16 @@ Resources:
           - DefineSafeApi
           - RootResourceId
       PathPart: plan
+  PlansResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId:
+        Ref: DefineSafeApi
+      ParentId:
+        'Fn::GetAtt':
+          - DefineSafeApi
+          - RootResourceId
+      PathPart: plans
 # Resource Options for CORS
   PlanOptions:
     DependsOn:
@@ -91,6 +101,38 @@ Resources:
           ResponseParameters:
             method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
             method.response.header.Access-Control-Allow-Methods: "'GET,POST,PUT,OPTIONS'" #This list must include all calls being made to this resource
+            method.response.header.Access-Control-Allow-Origin: "'*'"
+          ResponseTemplates:
+            application/json: ''
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        Type: MOCK
+      MethodResponses:
+      - StatusCode: 200
+        ResponseModels:
+          application/json: 'Empty'
+        ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: false
+            method.response.header.Access-Control-Allow-Methods: false
+            method.response.header.Access-Control-Allow-Origin: false
+  PlansOptions:
+    DependsOn:
+      - PlansResource
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      RestApiId:
+        Ref: DefineSafeApi
+      ResourceId:
+        Ref: PlansResource
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+            method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'" #This list must include all calls being made to this resource
             method.response.header.Access-Control-Allow-Origin: "'*'"
           ResponseTemplates:
             application/json: ''
@@ -242,6 +284,51 @@ Resources:
               - Ref: 'AWS::Region'
               - ':lambda:path/2015-03-31/functions/'
               - 'arn:aws:lambda:us-east-1:042537148068:function:CreatePlan'
+              - /invocations
+        IntegrationResponses:
+          - StatusCode: 200
+      ResourceId:
+        Ref: PlanResource
+      RestApiId:
+        Ref: DefineSafeApi
+      MethodResponses:
+        - StatusCode: 200
+# GetAllPlans
+  LambdaPermissions4:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:invokeFunction'
+      FunctionName: 'arn:aws:lambda:us-east-1:042537148068:function:GetAllPlans'
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        'Fn::Join':
+          - ''
+          - - 'arn:aws:execute-api:'
+            - Ref: 'AWS::Region'
+            - ':'
+            - Ref: 'AWS::AccountId'
+            - ':'
+            - Ref: DefineSafeApi
+            - /*
+  PlanRequest4:
+    DependsOn: 
+      - LambdaPermissions4
+      - PlanResource
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref Authorizer
+      HttpMethod: GET
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri:
+          'Fn::Join':
+            - ''
+            - - 'arn:aws:apigateway:'
+              - Ref: 'AWS::Region'
+              - ':lambda:path/2015-03-31/functions/'
+              - 'arn:aws:lambda:us-east-1:042537148068:function:GetAllPlans'
               - /invocations
         IntegrationResponses:
           - StatusCode: 200
