@@ -313,7 +313,7 @@ Resources:
   PlanRequest4:
     DependsOn: 
       - LambdaPermissions4
-      - PlanResource
+      - PlansResource
     Type: 'AWS::ApiGateway::Method'
     Properties:
       AuthorizationType: CUSTOM
@@ -333,7 +333,7 @@ Resources:
         IntegrationResponses:
           - StatusCode: 200
       ResourceId:
-        Ref: PlanResource
+        Ref: PlansResource
       RestApiId:
         Ref: DefineSafeApi
       MethodResponses:
