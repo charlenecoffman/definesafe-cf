@@ -1,33 +1,44 @@
-var aws = require('aws-sdk');
-var documentClient = new aws.DynamoDB.DocumentClient();
+const aws = require('aws-sdk');
 const jwt_decode = require('jwt-decode');
-var axios = require("axios").default;
+const axios = require("axios").default;
+
+const documentClient = new aws.DynamoDB.DocumentClient();
+const secretsmanager = new aws.SecretsManager();
 
 exports.handler = async (event, context, callback) => {
 
+    const clientSecret = await secretsmanager.getSecretValue({SecretId: process.env.AUTH0_CLIENT_SECRET_NAME}).promise();
 
-    const decoded = jwt_decode(event.headers["Authorization"]);
-    const user_id = decoded.sub.split("@")[0];
-
-    var options = {
+    console.log(clientSecret);
+    const options1 = {
       method: 'POST',
       url: process.env.URL,
       headers: {'content-type': 'application/x-www-form-urlencoded'},
       data: new URLSearchParams({
         grant_type: 'client_credentials',
         client_id: process.env.AUTH0_CLIENT_ID,
-        client_secret: '{yourClientSecret}',
+        client_secret: clientSecret,
         audience: process.env.AUDIENCE
       })
     };
     
-    axios.request(options).then(function (response) {
-      
-    }).catch(function (error) {
-      console.error(error);
-    });
+    var adminToken = await axios.request(options).promise();
+    console.log(adminToken);
 
-    const response ={
+    const decoded = jwt_decode(event.headers["Authorization"]);
+    const user_id = decoded.sub.split("@")[0];
+
+    const options2 = { 
+      method: "GET",
+      url: "https://login.auth0.com/api/v2/users/" + user_id,
+      headers: { "authorization": "Bearer " + adminToken },
+    };
+
+    var user = await axios.request(options).promise();
+
+    console.log(user);
+
+    const response = {
       "statusCode": 200,
       "headers": {
           "Content-Type": "*/*"

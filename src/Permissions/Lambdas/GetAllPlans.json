@@ -10,12 +10,14 @@
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
                 "dynamodb:Query",
-                "dynamodb:GetRecords"
+                "dynamodb:GetRecords",
+                "secretsmanager:GetSecretValue"
             ],
             "Resource": [
                 "arn:aws:dynamodb:*:042537148068:table/Plans/stream/*",
                 "arn:aws:dynamodb:*:042537148068:table/Plans/index/*",
-                "arn:aws:dynamodb:*:042537148068:table/Plans"
+                "arn:aws:dynamodb:*:042537148068:table/Plans",
+                "arn:aws:secretsmanager:us-east-1:042537148068:secret:APIExplorerApplication-ClientSecret-DefineSafe-Auth0-9cuS5n"
             ]
         }
     ]
