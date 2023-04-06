@@ -14,11 +14,11 @@ exports.handler = async (event, context, callback) => {
       TableName: 'Plans'
     };
 
-    console.log("got here")
-    console.log(event)
-    console.log(event.headers)
+    console.log(event.headers);
 
     var decoded = jwt_decode(event.headers["Authorization"]);
+
+    console.log(decoded);
 
     await documentClient.scan(params)
       .promise()
