@@ -17,8 +17,8 @@ exports.handler = async (event, context, callback) => {
     console.log(event.headers);
 
     var decoded = jwt_decode(event.headers["Authorization"]);
-
-    console.log(decoded);
+    var user_id = decoded.sub.split("@")[0];
+    console.log(user_id);
 
     await documentClient.scan(params)
       .promise()
