@@ -26,7 +26,7 @@ exports.handler = async (event, context, callback) => {
     console.log(adminToken);
 
     const decoded = jwt_decode(event.headers["Authorization"]);
-    const user_id = decoded.sub.split("@")[0];
+    const user_id = decoded.sub;
 
     const options2 = { 
       method: "GET",

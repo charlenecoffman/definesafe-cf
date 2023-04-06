@@ -1,11 +1,30 @@
 #!/bin/bash
 
+function update_lambda_configs_if_needed {
+    cd "$1"
+    for i in */
+    do
+        update_if_changes $i
+    done
+}
+
+function update_if_changes {
+    envConfigs=$(aws lambda get-function-configuration --function-name $1 --output json --query 'Environment.Variables')
+    currentEnv="$(<envConfigs)")
+    incomingEnv="$(<"../$1/.env")"
+    if [ "$currentEnv" != "$incomingEnv" ]
+    then
+        echo "Updating lambda env for $1"
+        aws lambda update-function-configuration --function-name $1 --environment '{\"Variables\":$incomingEnv}'
+    fi
+}
+
 function has_changes {
     functionName=$(aws lambda list-functions --query "Functions[?FunctionName == '$1'].FunctionName" --output text --region "us-east-1")
     if [[ -z "$functionName" ]] # if the lambda does not exist
     then # return true (which looks like "return")
         return
-    else # else check to see if the index file has changed - TODO: make this also check package.json or any .js files?
+    else # else check to see if the index file has changed - TODO: make this also check package.json?
         fileContents=$(curl -s "https://raw.githubusercontent.com/charlenecoffman/definesafe-cf/main/src/Lambdas/$1/index.js")
         contentsLocation=$(aws lambda get-function --function-name $1 --query 'Code.Location')
         contentsLocation="${contentsLocation%\"}"
@@ -41,7 +60,7 @@ function create_role_and_function {
     role=$(create_role $1)
     echo $role > returnObject.json
     sleep 10s
-    create_lambda $1 returnObject.json $2
+    create_lambda $1 returnObject.json $2 $3
 }
 
 function create_role {    
@@ -54,5 +73,5 @@ function create_role {
 }
 
 function create_lambda {
-    aws lambda create-function --function-name $1 --runtime "nodejs12.x" --role "$(jq -r '.Role.Arn' $2)" --handler "index.handler" --zip-file fileb://zips/$1.zip --region "us-east-1" --tags Solution="$3" --environment Variables="{JWKS_URI=https://definesafe.us.auth0.com/.well-known/jwks.json,AUDIENCE=https://api.definesafe.com,TOKEN_ISSUER=https://definesafe.us.auth0.com/}" --layers "arn:aws:lambda:us-east-1:177933569100:layer:AWS-Parameters-and-Secrets-Lambda-Extension:4"
+    aws lambda create-function --function-name $1 --runtime "nodejs12.x" --role "$(jq -r '.Role.Arn' $2)" --handler "index.handler" --zip-file fileb://zips/$1.zip --region "us-east-1" --tags Solution="$3" --layers "arn:aws:lambda:us-east-1:177933569100:layer:AWS-Parameters-and-Secrets-Lambda-Extension:4"
 }
