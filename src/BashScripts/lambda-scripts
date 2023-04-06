@@ -4,7 +4,7 @@ function update_lambda_configs_if_needed {
     cd "$1"
     for i in */
     do
-        update_if_changes $i
+        update_if_changes ${i%/}
     done
 }
 
