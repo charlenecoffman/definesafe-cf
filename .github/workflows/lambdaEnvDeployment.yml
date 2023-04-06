@@ -1,4 +1,4 @@
-name: LambdaDeployments
+name: LambdaEnvDeployments
 on:
   workflow_run:
     workflows: ["LambdaDeployments"]
