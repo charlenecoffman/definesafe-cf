@@ -10,7 +10,7 @@ function update_lambda_configs_if_needed {
 
 function update_if_changes {
     envConfigs=$(aws lambda get-function-configuration --function-name $1 --output json --query 'Environment.Variables')
-    currentEnv="$(<envConfigs)")
+    currentEnv="$(<envConfigs))"
     incomingEnv="$(<"../$1/.env")"
     if [ "$currentEnv" != "$incomingEnv" ]
     then
