@@ -4,18 +4,32 @@ function update_lambda_configs_if_needed {
     cd "$1"
     for i in */
     do
-        update_if_changes ${i%/}
+        FILE=./${i%/}/envVars.json
+        if [ -f "$FILE" ]; then
+            update_if_changes ${i%/}
+        else
+            echo "No updates for lambda env vars for function ${i%/}"
+        fi
     done
 }
 
 function update_if_changes {
-    envConfigs=$(aws lambda get-function-configuration --function-name $1 --output json --query 'Environment.Variables')
-    currentEnv="$(<$envConfigs))"
-    incomingEnv="$(<"../$1/.env")"
-    if [ "$currentEnv" != "$incomingEnv" ]
+    currentEnv=$(aws lambda get-function-configuration --function-name $1 --output json --query 'Environment.Variables')
+    echo $currentEnv > currentEnv.json
+    cat currentEnv.json | jq 'to_entries | map([.key, .value]|join(","))' > currentAsArray.json
+    cat currentAsArray.json | jq sort > currentSorted.json
+    stringForCompare_current=$(cat currentSorted.json | jq 'map(.)|join(",")')
+
+    cat ./${i}/envVars.json | jq 'to_entries | map([.key, .value]|join(","))' > incomingAsArray.json
+    cat incomingAsArray.json | jq sort > incomingSorted.json
+    stringForCompare_incoming=$(cat incomingSorted.json | jq 'map(.)|join(",")')
+
+    if [ $stringForCompare_current != $stringForCompare_incoming ]
     then
         echo "Updating lambda env for $1"
-        aws lambda update-function-configuration --function-name $1 --environment '{\"Variables\":$incomingEnv}'
+        incomingEnv="$(<"./$1/envVars.json")"
+        echo "{\"Variables\":$incomingEnv}" > envVarsForLambda.json
+        aws lambda update-function-configuration --function-name $1 --environment file://envVarsForLambda.json
     fi
 }
 
