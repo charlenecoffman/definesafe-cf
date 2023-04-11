@@ -24,7 +24,7 @@ function update_if_changes {
     cat incomingAsArray.json | jq sort > incomingSorted.json
     stringForCompare_incoming=$(cat incomingSorted.json | jq 'map(.)|join(",")')
     echo $stringForCompare_incoming
-    if [ $stringForCompare_current != $stringForCompare_incoming ]
+    if [ "$stringForCompare_current" != "$stringForCompare_incoming" ]
     then
         echo "Updating lambda env for $1"
         incomingEnv="$(<"./$1/envVars.json")"
