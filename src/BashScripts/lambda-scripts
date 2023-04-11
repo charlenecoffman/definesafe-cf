@@ -8,7 +8,7 @@ function update_lambda_configs_if_needed {
         if [ -f "$FILE" ]; then
             update_if_changes ${i%/}
         else
-            echo "No updates for lambda env vars for function ${i%/}"
+            echo "No env vars for function ${i%/}"
         fi
     done
 }
@@ -30,6 +30,8 @@ function update_if_changes {
         incomingEnv="$(<"./$1/envVars.json")"
         echo "{\"Variables\":$incomingEnv}" > envVarsForLambda.json
         aws lambda update-function-configuration --function-name $1 --environment file://envVarsForLambda.json
+    else
+        echo "No updates needed for $1"
     fi
 }
 
