@@ -8,8 +8,6 @@ const secretsmanager = new aws.SecretsManager();
 exports.handler = async (event, context, callback) => {
 
     const clientSecret = await secretsmanager.getSecretValue({SecretId: process.env.AUTH0_CLIENT_SECRET_NAME}).promise();
-
-    console.log(clientSecret);
     const options1 = {
       method: 'POST',
       url: process.env.URL,
@@ -22,8 +20,7 @@ exports.handler = async (event, context, callback) => {
       })
     };
     
-    var adminToken = await axios.request(options).promise();
-    console.log(adminToken);
+    var adminToken = await axios.request(options1).promise();
 
     const decoded = jwt_decode(event.headers["Authorization"]);
     const user_id = decoded.sub;
@@ -34,7 +31,7 @@ exports.handler = async (event, context, callback) => {
       headers: { "authorization": "Bearer " + adminToken },
     };
 
-    var user = await axios.request(options).promise();
+    var user = await axios.request(options2).promise();
 
     console.log(user);
 
