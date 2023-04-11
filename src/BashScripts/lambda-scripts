@@ -19,11 +19,11 @@ function update_if_changes {
     cat currentEnv.json | jq 'to_entries | map([.key, .value]|join(","))' > currentAsArray.json
     cat currentAsArray.json | jq sort > currentSorted.json
     stringForCompare_current=$(cat currentSorted.json | jq 'map(.)|join(",")')
-
+    echo $stringForCompare_current
     cat ./${i}/envVars.json | jq 'to_entries | map([.key, .value]|join(","))' > incomingAsArray.json
     cat incomingAsArray.json | jq sort > incomingSorted.json
     stringForCompare_incoming=$(cat incomingSorted.json | jq 'map(.)|join(",")')
-
+    echo $stringForCompare_incoming
     if [ $stringForCompare_current != $stringForCompare_incoming ]
     then
         echo "Updating lambda env for $1"
