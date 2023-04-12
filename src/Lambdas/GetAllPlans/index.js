@@ -20,7 +20,8 @@ exports.handler = async (event, context, callback) => {
       })
     };
     
-    var adminToken = await axios.request(options1).promise();
+    console.log(options1);
+    var adminToken = await axios.request(options1);
 
     const decoded = jwt_decode(event.headers["Authorization"]);
     const user_id = decoded.sub;
@@ -31,7 +32,8 @@ exports.handler = async (event, context, callback) => {
       headers: { "authorization": "Bearer " + adminToken },
     };
 
-    var user = await axios.request(options2).promise();
+    console.log(options2);
+    var user = await axios.request(options2);
 
     console.log(user);
 
