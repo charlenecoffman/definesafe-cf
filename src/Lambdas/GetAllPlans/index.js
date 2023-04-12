@@ -8,7 +8,7 @@ const secretsmanager = new aws.SecretsManager();
 exports.handler = async (event, context, callback) => {
 
     const clientSecret = await secretsmanager.getSecretValue({SecretId: process.env.AUTH0_CLIENT_SECRET_NAME}).promise();
-    console.log(clientSecret);
+    console.log(JSON.parse(clientSecret.SecretString).ClientSecret);
     const options1 = {
       method: 'POST',
       url: process.env.URL,
@@ -16,7 +16,7 @@ exports.handler = async (event, context, callback) => {
       data: new URLSearchParams({
         grant_type: 'client_credentials',
         client_id: process.env.AUTH0_CLIENT_ID,
-        client_secret: clientSecret,
+        client_secret: JSON.parse(clientSecret.SecretString).ClientSecret,
         audience: process.env.AUDIENCE
       })
     };
