@@ -22,7 +22,7 @@ exports.handler = async (event, context, callback) => {
     };
     
     console.log(options1);
-    var adminToken = await axios.request(options1);
+    var adminToken = (await axios.request(options1)).data.access_token;
     console.log(adminToken);
     const decoded = jwt_decode(event.headers["Authorization"]);
     const user_id = decoded.sub;
