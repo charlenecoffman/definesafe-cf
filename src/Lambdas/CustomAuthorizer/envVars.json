@@ -1,5 +1,5 @@
 {
     "JWKS_URI": "https://definesafe.us.auth0.com/.well-known/jwks.json",
-    "AUDIENCE": "urn:auth0-authz-api",
+    "AUDIENCE": "1Nv6m7ff4JNcmlE1uEYh4VSr2dPOOGnF",
     "TOKEN_ISSUER": "https://definesafe.us.auth0.com/"
 }
