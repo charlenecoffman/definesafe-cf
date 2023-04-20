@@ -34,7 +34,7 @@ exports.handler = async (event, context, callback) => {
     };
 
     console.log(options2);
-    var user = await axios.request(options2);
+    var user = (await axios.request(options2)).data;
 
     console.log(user);
 
