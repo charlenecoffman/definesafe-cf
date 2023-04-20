@@ -1,5 +1,6 @@
 const { uuid } = require('uuidv4');
 var aws = require('aws-sdk');
+const jwt_decode = require('jwt-decode');
 var documentClient = new aws.DynamoDB.DocumentClient();
 
 exports.handler = async (event, context, callback) => {
