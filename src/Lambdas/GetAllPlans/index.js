@@ -28,14 +28,13 @@ exports.handler = async (event, context, callback) => {
 
     const getUserInfoRequestParams = { 
       method: "GET",
-      url: "https://definesafe.us.auth0.com/api/v2/users/" + user_id,
+      url: "https://definesafe.us.auth0.com/api/v2/users/" + user_id + "/permissions",
       headers: { "authorization": "Bearer " + adminToken },
     };
 
     var user = (await axios.request(getUserInfoRequestParams)).data;
 
     console.log(user);
-    console.log(user.app_metadata.authorization.permissions);
 
     const response = {
       "statusCode": 200,
