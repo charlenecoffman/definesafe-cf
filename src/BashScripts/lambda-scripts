@@ -15,21 +15,35 @@ function update_lambda_configs_if_needed {
 
 function update_if_changes {
     currentEnv=$(aws lambda get-function-configuration --function-name $1 --output json --query 'Environment.Variables')
-    echo $currentEnv > currentEnv.json
-    cat currentEnv.json | jq 'to_entries | map([.key, .value]|join(","))' > currentAsArray.json
-    cat currentAsArray.json | jq sort > currentSorted.json
-    stringForCompare_current=$(cat currentSorted.json | jq 'map(.)|join(",")')
-    cat ./${i}/envVars.json | jq 'to_entries | map([.key, .value]|join(","))' > incomingAsArray.json
-    cat incomingAsArray.json | jq sort > incomingSorted.json
-    stringForCompare_incoming=$(cat incomingSorted.json | jq 'map(.)|join(",")')
-    if [ "$stringForCompare_current" != "$stringForCompare_incoming" ]
+    doUpdate=false;
+    # check to see if this is a new function first, set doUpdate for all new functions
+    if [ -z $currentEnv ]
     then
-        echo "Updating lambda env for $1"
+        echo "New lambda permissions for $1"
+        doUpdate=true;
+    else
+        echo $currentEnv > currentEnv.json
+        cat currentEnv.json | jq 'to_entries | map([.key, .value]|join(","))' > currentAsArray.json
+        cat currentAsArray.json | jq sort > currentSorted.json
+        stringForCompare_current=$(cat currentSorted.json | jq 'map(.)|join(",")')
+        cat ./${i}/envVars.json | jq 'to_entries | map([.key, .value]|join(","))' > incomingAsArray.json
+        cat incomingAsArray.json | jq sort > incomingSorted.json
+        stringForCompare_incoming=$(cat incomingSorted.json | jq 'map(.)|join(",")')
+        #if there have been changes, then set doUpdate
+        if [ "$stringForCompare_current" != "$stringForCompare_incoming" ]
+        then
+            echo "Updating lambda env for $1"
+            doUpdate=true;       
+        else
+            echo "No updates needed for $1"
+        fi
+    fi
+    # if do update is true then we actually do the update
+    if [ $doUpdate == true ]
+    then
         incomingEnv="$(<"./$1/envVars.json")"
         echo "{\"Variables\":$incomingEnv}" > envVarsForLambda.json
         aws lambda update-function-configuration --function-name $1 --environment file://envVarsForLambda.json
-    else
-        echo "No updates needed for $1"
     fi
 }
 
