@@ -17,7 +17,7 @@ function update_if_changes {
     currentEnv=$(aws lambda get-function-configuration --function-name $1 --output json --query 'Environment.Variables')
     doUpdate=false;
     # check to see if this is a new function first, set doUpdate for all new functions
-    if [[ -z $currentEnv ]]
+    if [ $currentEnv == null ]
     then
         echo "New lambda permissions for $1"
         doUpdate=true;
