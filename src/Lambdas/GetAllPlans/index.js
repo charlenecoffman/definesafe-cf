@@ -29,7 +29,7 @@ exports.handler = async (event, context, callback) => {
 
     const options2 = { 
       method: "GET",
-      url: "https://login.auth0.com/api/v2/users/" + user_id,
+      url: "https://definesafe.us.auth0.com/api/v2/users/" + user_id,
       headers: { "authorization": "Bearer " + adminToken },
     };
 
