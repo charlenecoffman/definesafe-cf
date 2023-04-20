@@ -54,7 +54,7 @@ exports.handler = async (event, context, callback) => {
     const params = {
       TableName: 'Plans'
     };
-    
+    console.log("test");
     await documentClient.scan(params)
       .promise()
       .then(resp => {

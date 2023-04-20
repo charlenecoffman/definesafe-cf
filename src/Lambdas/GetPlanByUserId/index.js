@@ -22,6 +22,8 @@ exports.handler = async (event, context, callback) => {
       Select: 'ALL_ATTRIBUTES'
     };
 
+    console.log("test");
+
     await documentClient.query(params)
       .promise()
       .then(resp => {
