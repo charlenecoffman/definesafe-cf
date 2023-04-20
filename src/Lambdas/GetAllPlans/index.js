@@ -32,9 +32,19 @@ exports.handler = async (event, context, callback) => {
       headers: { "authorization": "Bearer " + adminToken },
     };
 
-    var user = (await axios.request(getUserInfoRequestParams)).data;
+    var permissions = (await axios.request(getUserInfoRequestParams)).data.map(p => p.permission_name);
 
-    console.log(user);
+    console.log(permissions);
+
+    if(!permissions.includes("write:admin")){
+      callback(null, {
+        "statusCode": 401,
+        "body": "This user is not an admin user",
+        "headers": {
+            "Content-Type": "*/*"
+        }
+      })
+    }
 
     const response = {
       "statusCode": 200,
