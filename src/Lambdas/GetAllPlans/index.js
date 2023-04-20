@@ -8,8 +8,8 @@ const secretsmanager = new aws.SecretsManager();
 exports.handler = async (event, context, callback) => {
 
     const clientSecret = await secretsmanager.getSecretValue({SecretId: process.env.AUTH0_CLIENT_SECRET_NAME}).promise();
-    console.log(JSON.parse(clientSecret.SecretString).ClientSecret);
-    const options1 = {
+    
+    const adminTokenRequestParams = {
       method: 'POST',
       url: process.env.URL,
       headers: {'content-type': 'application/x-www-form-urlencoded'},
@@ -21,20 +21,18 @@ exports.handler = async (event, context, callback) => {
       })
     };
     
-    console.log(options1);
-    var adminToken = (await axios.request(options1)).data.access_token;
-    console.log(adminToken);
+    var adminToken = (await axios.request(adminTokenRequestParams)).data.access_token;
+
     const decoded = jwt_decode(event.headers["Authorization"]);
     const user_id = decoded.sub;
 
-    const options2 = { 
+    const getUserInfoRequestParams = { 
       method: "GET",
       url: "https://definesafe.us.auth0.com/api/v2/users/" + user_id,
       headers: { "authorization": "Bearer " + adminToken },
     };
 
-    console.log(options2);
-    var user = (await axios.request(options2)).data;
+    var user = (await axios.request(getUserInfoRequestParams)).data;
 
     console.log(user);
 
