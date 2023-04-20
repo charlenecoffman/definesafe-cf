@@ -4,8 +4,8 @@
         {
             "Sid": "VisualEditor0",
             "Effect": "Allow",
-            "Action": "",
-            "Resource": ""
+            "Action": "secretsmanager:GetSecretValue",
+            "Resource": "arn:aws:secretsmanager:us-east-1:042537148068:secret:APIExplorerApplication-ClientSecret-DefineSafe-Auth0-9cuS5n"
         }
     ]
 }
