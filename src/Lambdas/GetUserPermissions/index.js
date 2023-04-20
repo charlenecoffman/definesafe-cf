@@ -22,7 +22,7 @@ exports.handler = async (event, context, callback) => {
 
     const getUserInfoRequestParams = { 
       method: "GET",
-      url: "https://definesafe.us.auth0.com/api/v2/users/" +  + "/permissions",
+      url: "https://definesafe.us.auth0.com/api/v2/users/" + context.payload.user_id + "/permissions",
       headers: { "authorization": "Bearer " + adminToken },
     };
 
