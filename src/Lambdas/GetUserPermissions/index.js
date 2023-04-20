@@ -1,4 +1,5 @@
 const axios = require("axios").default;
+var aws = require('aws-sdk');
 
 const secretsmanager = new aws.SecretsManager();
 
