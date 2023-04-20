@@ -9,14 +9,15 @@ exports.handler = async (event, context, callback) => {
         }
     };
 
-    const qsParams = event.queryStringParameters;
+    const decoded = jwt_decode(event.headers["Authorization"]);
+    const user_id = decoded.sub;
     
     var params = {
       TableName: 'Plans',
       IndexName: 'User_Id',
       KeyConditionExpression: "User_Id = :User_Id",
       ExpressionAttributeValues: {
-          ":User_Id": qsParams.User_Id
+          ":User_Id": user_id
       },
       Select: 'ALL_ATTRIBUTES'
     };

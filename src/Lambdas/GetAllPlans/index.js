@@ -34,8 +34,6 @@ exports.handler = async (event, context, callback) => {
 
     var permissions = (await axios.request(getUserInfoRequestParams)).data.map(p => p.permission_name);
 
-    console.log(permissions);
-
     if(!permissions.includes("write:admin")){
       callback(null, {
         "statusCode": 401,

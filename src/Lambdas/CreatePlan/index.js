@@ -10,12 +10,15 @@ exports.handler = async (event, context, callback) => {
     };
 
     const newPlan = JSON.parse(event.body);
+    
+    const decoded = jwt_decode(event.headers["Authorization"]);
+    const user_id = decoded.sub;
 
     var params = {
       TableName: 'Plans',
       Item: {
         'Plan_Id':  uuid(),
-        'User_Id': newPlan.User_Id,
+        'User_Id': user_id,
         "Coping_Skills": newPlan.Coping_Skills,
         "Triggers": newPlan.Triggers
       }
