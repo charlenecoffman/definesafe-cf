@@ -34,7 +34,7 @@ exports.handler = async (event, context, callback) => {
 
     var user = (await axios.request(getUserInfoRequestParams)).data;
 
-    console.log(user);
+    console.log(user.app_metadata.authorization.permissions);
 
     const response = {
       "statusCode": 200,
