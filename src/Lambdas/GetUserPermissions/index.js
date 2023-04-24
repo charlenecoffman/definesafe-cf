@@ -5,8 +5,6 @@ const secretsmanager = new aws.SecretsManager();
 
 exports.handler = async (event, context, callback) => {
 
-    console.log(context);
-    console.log(event);
     const clientSecret = await secretsmanager.getSecretValue({SecretId: process.env.AUTH0_CLIENT_SECRET_NAME}).promise();
     
     const adminTokenRequestParams = {
@@ -25,11 +23,11 @@ exports.handler = async (event, context, callback) => {
     console.log("test");
     const getUserInfoRequestParams = { 
       method: "GET",
-      url: "https://definesafe.us.auth0.com/api/v2/users/" + context.payload.user_id + "/permissions",
+      url: "https://definesafe.us.auth0.com/api/v2/users/" + context.user_id + "/permissions",
       headers: { "authorization": "Bearer " + adminToken },
     };
 
     var permissions = (await axios.request(getUserInfoRequestParams)).data.map(p => p.permission_name);
-
+    console.log(permissions);
     return JSON.stringify(permissions)
 }
