@@ -11,13 +11,15 @@
                 "dynamodb:Scan",
                 "dynamodb:Query",
                 "dynamodb:GetRecords",
-                "secretsmanager:GetSecretValue"
+                "secretsmanager:GetSecretValue",
+                "lambda:invoke"
             ],
             "Resource": [
                 "arn:aws:dynamodb:*:042537148068:table/Plans/stream/*",
                 "arn:aws:dynamodb:*:042537148068:table/Plans/index/*",
                 "arn:aws:dynamodb:*:042537148068:table/Plans",
-                "arn:aws:secretsmanager:us-east-1:042537148068:secret:APIExplorerApplication-ClientSecret-DefineSafe-Auth0-9cuS5n"
+                "arn:aws:secretsmanager:us-east-1:042537148068:secret:APIExplorerApplication-ClientSecret-DefineSafe-Auth0-9cuS5n",
+                "arn:aws:lambda:us-east-1:042537148068:function:GetUserPermissions"
             ]
         }
     ]
