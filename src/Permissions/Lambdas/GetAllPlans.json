@@ -12,7 +12,7 @@
                 "dynamodb:Query",
                 "dynamodb:GetRecords",
                 "secretsmanager:GetSecretValue",
-                "lambda:invoke",
+                "lambda:Invoke",
                 "lambda:InvokeAsync"
             ],
             "Resource": [
