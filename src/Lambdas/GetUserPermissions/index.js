@@ -24,7 +24,7 @@ exports.handler = async (event, context, callback) => {
     console.log("test");
     const getUserInfoRequestParams = { 
       method: "GET",
-      url: "https://definesafe.us.auth0.com/api/v2/users/" + context.user_id + "/permissions",
+      url: "https://definesafe.us.auth0.com/api/v2/users/" + event.user_id + "/permissions",
       headers: { "authorization": "Bearer " + adminToken },
     };
 
