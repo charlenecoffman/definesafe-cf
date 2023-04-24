@@ -6,8 +6,6 @@ const secretsmanager = new aws.SecretsManager();
 exports.handler = async (event, context, callback) => {
 
     const clientSecret = await secretsmanager.getSecretValue({SecretId: process.env.AUTH0_CLIENT_SECRET_NAME}).promise();
-    console.log(context);
-    console.log(event);
     const adminTokenRequestParams = {
       method: 'POST',
       url: process.env.URL,
@@ -29,6 +27,5 @@ exports.handler = async (event, context, callback) => {
     };
 
     var permissions = (await axios.request(getUserInfoRequestParams)).data.map(p => p.permission_name);
-    console.log(permissions);
     return JSON.stringify(permissions)
 }
