@@ -13,7 +13,7 @@ exports.handler = async (event, context, callback) => {
     var lambdaParams = {
       FunctionName: 'GetUserPermissions',
       InvocationType: 'RequestResponse',
-      Payload: {User_Id: user_id}
+      Payload: {user_id: user_id}
     };
 
     var permissions = await lambdahandler.invoke(lambdaParams).promise();
