@@ -4,9 +4,20 @@ const axios = require("axios").default;
 
 const documentClient = new aws.DynamoDB.DocumentClient();
 const secretsmanager = new aws.SecretsManager();
+const lambdahandler = new aws.Lambda();
 
 exports.handler = async (event, context, callback) => {
+    const decoded = jwt_decode(event.headers["Authorization"]);
+    const user_id = decoded.sub;
 
+    var lambdaParams = {
+      FunctionName: 'GetUserPermissions',
+      InvocationType: 'RequestResponse',
+      Payload: {User_Id: user_id}
+    };
+
+    var permissions = await lambdahandler.invoke(lambdaParams).promise();
+    console.log(permissions);
     const clientSecret = await secretsmanager.getSecretValue({SecretId: process.env.AUTH0_CLIENT_SECRET_NAME}).promise();
     
     const adminTokenRequestParams = {
@@ -22,9 +33,6 @@ exports.handler = async (event, context, callback) => {
     };
     
     var adminToken = (await axios.request(adminTokenRequestParams)).data.access_token;
-
-    const decoded = jwt_decode(event.headers["Authorization"]);
-    const user_id = decoded.sub;
 
     const getUserInfoRequestParams = { 
       method: "GET",
