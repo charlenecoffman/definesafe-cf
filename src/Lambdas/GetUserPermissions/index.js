@@ -6,7 +6,8 @@ const secretsmanager = new aws.SecretsManager();
 exports.handler = async (event, context, callback) => {
 
     const clientSecret = await secretsmanager.getSecretValue({SecretId: process.env.AUTH0_CLIENT_SECRET_NAME}).promise();
-    
+    console.log(context);
+    console.log(event);
     const adminTokenRequestParams = {
       method: 'POST',
       url: process.env.URL,
