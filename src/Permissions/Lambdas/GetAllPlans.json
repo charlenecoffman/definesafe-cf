@@ -13,7 +13,7 @@
                 "dynamodb:GetRecords",
                 "secretsmanager:GetSecretValue",
                 "lambda:InvokeFunction",
-                "lambda:InvokeFunctionAsync"
+                "lambda:InvokeAsync"
             ],
             "Resource": [
                 "arn:aws:dynamodb:*:042537148068:table/Plans/stream/*",
