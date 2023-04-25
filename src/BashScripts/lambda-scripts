@@ -4,7 +4,7 @@ function update_lambda_configs_if_needed {
     cd "$1"
     for i in */
     do
-        FILE=./${i%/}/envVars.json
+        FILE=./${i%/}.json
         if [ -f "$FILE" ]; then
             update_if_changes ${i%/}
         else
@@ -26,7 +26,7 @@ function update_if_changes {
         cat currentEnv.json | jq 'to_entries | map([.key, .value]|join(","))' > currentAsArray.json
         cat currentAsArray.json | jq sort > currentSorted.json
         stringForCompare_current=$(cat currentSorted.json | jq 'map(.)|join(",")')
-        cat ./${i}/envVars.json | jq 'to_entries | map([.key, .value]|join(","))' > incomingAsArray.json
+        cat ./${i}.json | jq 'to_entries | map([.key, .value]|join(","))' > incomingAsArray.json
         cat incomingAsArray.json | jq sort > incomingSorted.json
         stringForCompare_incoming=$(cat incomingSorted.json | jq 'map(.)|join(",")')
         #if there have been changes, then set doUpdate
@@ -41,7 +41,7 @@ function update_if_changes {
     # if do update is true then we actually do the update
     if [ $doUpdate == true ]
     then
-        incomingEnv="$(<"./$1/envVars.json")"
+        incomingEnv="$(<"./$1.json")"
         echo "{\"Variables\":$incomingEnv}" > envVarsForLambda.json
         aws lambda update-function-configuration --function-name $1 --environment file://envVarsForLambda.json
     fi

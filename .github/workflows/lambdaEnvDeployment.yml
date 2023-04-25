@@ -21,7 +21,7 @@ jobs:
       - name: Update Configs
         run: |
           source ./src/BashScripts/lambda-scripts
-          update_lambda_configs_if_needed "./src/Lambdas"
+          update_lambda_configs_if_needed "./src/EnvironmentVariables"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

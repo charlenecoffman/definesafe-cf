@@ -4,7 +4,7 @@ var aws = require('aws-sdk');
 const secretsmanager = new aws.SecretsManager();
 
 exports.handler = async (event, context, callback) => {
-
+    
     const clientSecret = await secretsmanager.getSecretValue({SecretId: process.env.AUTH0_CLIENT_SECRET_NAME}).promise();
     const adminTokenRequestParams = {
       method: 'POST',
@@ -19,7 +19,6 @@ exports.handler = async (event, context, callback) => {
     };
     
     var adminToken = (await axios.request(adminTokenRequestParams)).data.access_token;
-    console.log("test");
     const getUserInfoRequestParams = { 
       method: "GET",
       url: "https://definesafe.us.auth0.com/api/v2/users/" + event.user_id + "/permissions",
