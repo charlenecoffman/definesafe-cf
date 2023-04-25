@@ -148,6 +148,23 @@ Resources:
             method.response.header.Access-Control-Allow-Headers: false
             method.response.header.Access-Control-Allow-Methods: false
             method.response.header.Access-Control-Allow-Origin: false
+# Models
+CreatePlanRequestModel:
+  Type: 'AWS::ApiGateway::Model'
+  Properties:
+    RestApiId: !Ref DefineSafeApi
+    ContentType: application/json
+    Description: Create Plan request model
+    Name: CreatePlanRequestModel
+    Schema:
+      $schema: 'http://json-schema.org/draft-04/schema#'
+      title: CreatePlanRequestModel
+      type: object
+      properties:
+        triggers:
+          type: string
+        coping_skills:
+          type: string
 # Methods below here include a lambda permission and a method definition
 # GetPlanByUserId
   LambdaPermissions:
@@ -256,6 +273,7 @@ Resources:
     DependsOn: 
       - LambdaPermissions3
       - PlanResource
+      - CreatePlanRequestModel
     Type: 'AWS::ApiGateway::Method'
     Properties:
       AuthorizationType: CUSTOM
