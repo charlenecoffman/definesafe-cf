@@ -152,7 +152,7 @@ Resources:
 CreatePlanRequestModel:
   Type: 'AWS::ApiGateway::Model'
   Properties:
-    ApiId: !Ref DefineSafeApi
+    RestApiId: !Ref DefineSafeApi
     ContentType: application/json
     Description: Create Plan request model
     Name: CreatePlanRequestModel
