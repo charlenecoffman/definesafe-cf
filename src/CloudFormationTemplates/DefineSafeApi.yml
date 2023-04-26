@@ -185,22 +185,6 @@ Resources:
             type: string
           coping_skills:
             type: string
-  GetPlanByUserIdResponseModel:
-    DependsOn: 
-      - PlanModel
-    Type: 'AWS::ApiGateway::Model'
-    Properties:
-      RestApiId: !Ref DefineSafeApi
-      ContentType: application/json
-      Description: The Plan response model returned on Get Plan
-      Name: GetPlanByUserIdResponseModel
-      Schema:
-        $schema: 'http://json-schema.org/draft-04/schema#'
-        title: GetPlanByUserIdResponseModel
-        type: object
-        properties:
-          plan:
-            type: PlanModel
 # Methods below here include a lambda permission and a method definition
 # GetPlanByUserId
   LambdaPermissions:
@@ -246,7 +230,7 @@ Resources:
       MethodResponses:
         - StatusCode: 200
           ResponseModels:
-            application/json: GetPlanByUserIdResponseModel
+            application/json: PlanModel
 # UpdatePlanById
   LambdaPermissions2:
     Type: 'AWS::Lambda::Permission'
