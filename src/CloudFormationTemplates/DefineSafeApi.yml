@@ -297,7 +297,7 @@ Resources:
       RestApiId:
         Ref: DefineSafeApi
       RequestModels:
-        Model: !Ref CreatePlanRequestModel
+        application/json: CreatePlanRequestModel
       MethodResponses:
         - StatusCode: 200
 # GetAllPlans
