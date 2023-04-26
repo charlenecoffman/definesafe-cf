@@ -154,11 +154,11 @@ Resources:
     Properties:
       RestApiId: !Ref DefineSafeApi
       ContentType: application/json
-      Description: Create Plan request model
-      Name: CreatePlanRequestModel
+      Description: Plan request model
+      Name: PlanModel
       Schema:
         $schema: 'http://json-schema.org/draft-04/schema#'
-        title: CreatePlanRequestModel
+        title: PlanModel
         type: object
         properties:
           plan_id:
