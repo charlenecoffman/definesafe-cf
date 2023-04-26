@@ -207,6 +207,7 @@ Resources:
     DependsOn: 
       - LambdaPermissions
       - PlanResource
+      - PlanModel
     Type: 'AWS::ApiGateway::Method'
     Properties:
       AuthorizationType: CUSTOM
