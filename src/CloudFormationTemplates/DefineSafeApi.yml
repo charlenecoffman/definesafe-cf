@@ -185,6 +185,22 @@ Resources:
             type: string
           coping_skills:
             type: string
+  UpdatePlanRequestModel:
+    Type: 'AWS::ApiGateway::Model'
+    Properties:
+      RestApiId: !Ref DefineSafeApi
+      ContentType: application/json
+      Description: Update Plan request model
+      Name: UpdatePlanRequestModel
+      Schema:
+        $schema: 'http://json-schema.org/draft-04/schema#'
+        title: UpdatePlanRequestModel
+        type: object
+        properties:
+          triggers:
+            type: string
+          coping_skills:
+            type: string
 # Methods below here include a lambda permission and a method definition
 # GetPlanByUserId
   LambdaPermissions:
@@ -253,6 +269,8 @@ Resources:
     DependsOn: 
       - LambdaPermissions2
       - PlanResource
+      - UpdatePlanRequestModel
+      - PlanModel
     Type: 'AWS::ApiGateway::Method'
     Properties:
       AuthorizationType: CUSTOM
@@ -274,9 +292,13 @@ Resources:
       ResourceId:
         Ref: PlanResource
       RestApiId:
-        Ref: DefineSafeApi
+        Ref: DefineSafeApi      
+      RequestModels:
+        application/json: UpdatePlanRequestModel
       MethodResponses:
         - StatusCode: 200
+          ResponseModels:
+            application/json: PlanModel
 # CreatePlan
   LambdaPermissions3:
     Type: 'AWS::Lambda::Permission'
