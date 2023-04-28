@@ -1,5 +1,6 @@
 var aws = require('aws-sdk');
 var documentClient = new aws.DynamoDB.DocumentClient();
+const jwt_decode = require('jwt-decode');
 
 exports.handler = async (event, context, callback) => {
     const response ={
