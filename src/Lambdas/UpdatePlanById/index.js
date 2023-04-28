@@ -20,7 +20,7 @@ exports.handler = async (event, context, callback) => {
         callback(null, response)
     }
 
-    const updateResponse = await documentClient.update(updatePlanParams).promise();
+    const updateResponse = await documentClient.update(updatePlanParams).promise().then(resp => console.log(resp));
     
     console.log(updateResponse);
     
