@@ -23,7 +23,7 @@ Resources:
   ApiDeployment:
     Type: 'AWS::ApiGateway::Deployment'
     DependsOn:
-      - PlanRequest
+      - GetPlanMethod
     Properties:
       RestApiId:
         Ref: DefineSafeApi
