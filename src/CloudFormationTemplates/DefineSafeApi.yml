@@ -225,7 +225,7 @@ Resources:
               type: string
 # Methods below here include a lambda permission and a method definition
 # GetPlanByUserId
-  LambdaPermissions:
+  GetPlanPermissions:
     Type: 'AWS::Lambda::Permission'
     Properties:
       Action: 'lambda:invokeFunction'
@@ -241,9 +241,9 @@ Resources:
             - ':'
             - Ref: DefineSafeApi
             - /*
-  PlanRequest:
+  GetPlanMethod:
     DependsOn: 
-      - LambdaPermissions
+      - GetPlanPermissions
       - PlanResource
       - PlanModel
     Type: 'AWS::ApiGateway::Method'
@@ -271,7 +271,7 @@ Resources:
           ResponseModels:
             application/json: PlanModel
 # UpdatePlanById
-  LambdaPermissions2:
+  UpdatePlanPermissions:
     Type: 'AWS::Lambda::Permission'
     Properties:
       Action: 'lambda:invokeFunction'
@@ -287,9 +287,9 @@ Resources:
             - ':'
             - Ref: DefineSafeApi
             - /*
-  PlanRequest2:
+  UpdatePlanMethod:
     DependsOn: 
-      - LambdaPermissions2
+      - UpdatePlanPermissions
       - PlanResource
       - UpdatePlanRequestModel
       - PlanModel
@@ -322,7 +322,7 @@ Resources:
           ResponseModels:
             application/json: PlanModel
 # CreatePlan
-  LambdaPermissions3:
+  CreatePlanPermissions:
     Type: 'AWS::Lambda::Permission'
     Properties:
       Action: 'lambda:invokeFunction'
@@ -338,9 +338,9 @@ Resources:
             - ':'
             - Ref: DefineSafeApi
             - /*
-  PlanRequest3:
+  CreatePlanMethod:
     DependsOn: 
-      - LambdaPermissions3
+      - CreatePlanPermissions
       - PlanResource
       - CreatePlanRequestModel
     Type: 'AWS::ApiGateway::Method'
@@ -372,7 +372,7 @@ Resources:
           ResponseModels:
             application/json: PlanModel
 # GetAllPlans
-  LambdaPermissions4:
+  GetAllPlansPermissions:
     Type: 'AWS::Lambda::Permission'
     Properties:
       Action: 'lambda:invokeFunction'
@@ -388,10 +388,11 @@ Resources:
             - ':'
             - Ref: DefineSafeApi
             - /*
-  PlanRequest4:
+  GetAllPlansMethod:
     DependsOn: 
-      - LambdaPermissions4
+      - GetAllPlansPermissions
       - PlansResource
+      - GetPlansResponseModel
     Type: 'AWS::ApiGateway::Method'
     Properties:
       AuthorizationType: CUSTOM
