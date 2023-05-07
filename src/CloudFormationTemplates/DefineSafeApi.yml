@@ -417,4 +417,4 @@ Resources:
       MethodResponses:
         - StatusCode: 200
           ResponseModels:
-            application/json: PlanModel
+            application/json: GetPlansResponseModel
