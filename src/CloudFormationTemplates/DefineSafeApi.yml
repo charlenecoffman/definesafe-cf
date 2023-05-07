@@ -216,14 +216,16 @@ Resources:
           plans:
             type: array
             items:
-              plan_id:
-                type: string
-              user_id:
-                type: string
-              triggers:
-                type: string
-              coping_skills:
-                type: string
+              type: object
+              properties:
+                plan_id:
+                  type: string
+                user_id:
+                  type: string
+                triggers:
+                  type: string
+                coping_skills:
+                  type: string
 # Methods below here include a lambda permission and a method definition
 # GetPlanByUserId
   GetPlanPermissions:
