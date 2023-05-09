@@ -6,7 +6,9 @@ var documentClient = new aws.DynamoDB.DocumentClient();
 exports.handler = async (event, context, callback) => {
     const response ={
         "headers": {
-            "Content-Type": "*/*"
+            "Content-Type": "*/*",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": true
         }
     };
 

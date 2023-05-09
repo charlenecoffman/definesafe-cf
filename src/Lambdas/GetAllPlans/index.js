@@ -22,7 +22,9 @@ exports.handler = async (event, context, callback) => {
         "statusCode": 401,
         "body": "This user is not an admin user",
         "headers": {
-            "Content-Type": "*/*"
+            "Content-Type": "*/*",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": true
         }
       })
     }
