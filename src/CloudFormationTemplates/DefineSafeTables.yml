@@ -33,3 +33,36 @@ Resources:
       Tags:
         - Key: Solution
           Value: DefineSafe
+  MedicationTable:
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      AttributeDefinitions: 
+        - 
+          AttributeName: "Medication_Id"
+          AttributeType: "S"
+        - 
+          AttributeName: "User_Id"
+          AttributeType: "S"
+      KeySchema: 
+        - 
+          AttributeName: "Medication_Id"
+          KeyType: "HASH"
+      ProvisionedThroughput: 
+        ReadCapacityUnits: "1"
+        WriteCapacityUnits: "1"
+      TableName: "Medications"
+      GlobalSecondaryIndexes:
+        -
+          IndexName: "User_Id"
+          KeySchema: 
+            - 
+              AttributeName: "User_Id"
+              KeyType: "HASH"
+          Projection:
+            ProjectionType: "ALL"
+          ProvisionedThroughput: 
+            ReadCapacityUnits: "1"
+            WriteCapacityUnits: "1"
+      Tags:
+        - Key: Solution
+          Value: DefineSafe
