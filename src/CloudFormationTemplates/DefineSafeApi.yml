@@ -24,6 +24,10 @@ Resources:
     Type: 'AWS::ApiGateway::Deployment'
     DependsOn:
       - GetPlanMethod
+      - UpdatePlanMethod
+      - CreatePlanMethod
+      - AddMedicationMethod
+      - GetAllPlansMethod
     Properties:
       RestApiId:
         Ref: DefineSafeApi
