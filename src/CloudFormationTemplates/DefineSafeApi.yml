@@ -28,6 +28,7 @@ Resources:
       - CreatePlanMethod
       - AddMedicationMethod
       - GetAllPlansMethod
+      - GetMedicationsMethod
     Properties:
       RestApiId:
         Ref: DefineSafeApi
@@ -97,6 +98,16 @@ Resources:
           - DefineSafeApi
           - RootResourceId
       PathPart: medication
+  MedicationsResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId:
+        Ref: DefineSafeApi
+      ParentId:
+        'Fn::GetAtt':
+          - DefineSafeApi
+          - RootResourceId
+      PathPart: medications
 # Resource Options for CORS
   PlanOptions:
     DependsOn:
@@ -340,6 +351,47 @@ Resources:
             type: [string, 'null']
           reason_for_stop:
             type: [string, 'null']
+  GetMedicationsResponseModel:
+    Type: 'AWS::ApiGateway::Model'
+    Properties:
+      RestApiId: !Ref DefineSafeApi
+      ContentType: application/json
+      Description: Model returned when calling to get all meds for a user
+      Name: GetMedicationsResponseModel
+      Schema:
+        $schema: 'http://json-schema.org/draft-04/schema#'
+        title: GetMedicationsResponseModel
+        type: object
+        properties:
+          medications:
+            type: array
+            items:
+              type: object
+              properties:
+                medication_id:
+                  type: string
+                user_id:
+                  type: string
+                medication_name:
+                  type: string
+                dosage_quantity:
+                  type: [integer, 'null']
+                dosage_unit:
+                  type: [string, 'null']
+                times_per:
+                  type: [integer, 'null']
+                times_per_unit:
+                  type: [string, 'null']
+                time_taken:
+                  type: [string, 'null']
+                date_started:
+                  type: [string, 'null']
+                intended_use:
+                  type: [string, 'null']
+                date_stopped:
+                  type: [string, 'null']
+                reason_for_stop:
+                  type: [string, 'null']
 # Methods below here include a lambda permission and a method definition
 # GetPlanByUserId
   GetPlanPermissions:
@@ -587,3 +639,51 @@ Resources:
         - StatusCode: 200
           ResponseModels:
             application/json: GetPlansResponseModel
+# GetMedications
+  GetMedicationsPermissions:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:invokeFunction'
+      FunctionName: 'arn:aws:lambda:us-east-1:042537148068:function:GetMedications'
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        'Fn::Join':
+          - ''
+          - - 'arn:aws:execute-api:'
+            - Ref: 'AWS::Region'
+            - ':'
+            - Ref: 'AWS::AccountId'
+            - ':'
+            - Ref: DefineSafeApi
+            - /*
+  GetMedicationsMethod:
+    DependsOn: 
+      - GetMedicationsPermissions
+      - MedicationsResource
+      - GetMedicationsResponseModel
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref Authorizer
+      HttpMethod: GET
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri:
+          'Fn::Join':
+            - ''
+            - - 'arn:aws:apigateway:'
+              - Ref: 'AWS::Region'
+              - ':lambda:path/2015-03-31/functions/'
+              - 'arn:aws:lambda:us-east-1:042537148068:function:GetMedications'
+              - /invocations
+        IntegrationResponses:
+          - StatusCode: 200
+      ResourceId:
+        Ref: MedicationsResource
+      RestApiId:
+        Ref: DefineSafeApi
+      MethodResponses:
+        - StatusCode: 200
+          ResponseModels:
+            application/json: GetMedicationsResponseModel
