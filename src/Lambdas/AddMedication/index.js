@@ -4,7 +4,7 @@ const jwt_decode = require('jwt-decode');
 var documentClient = new aws.DynamoDB.DocumentClient();
 
 exports.handler = async (event, context, callback) => {
-    const response ={
+    const response = {
         "headers": {
             "Content-Type": "*/*",
             "Access-Control-Allow-Origin": "*",
@@ -12,6 +12,7 @@ exports.handler = async (event, context, callback) => {
         }
     };
 
+    console.log(event);
     const newMedication = JSON.parse(event.body);
 
     if(newMedication.Medication_Name === ""){
