@@ -43,7 +43,7 @@ const GetUserIdFromHeaders = (event) => {
 }
 
 const GetMedicationIdFromPath = (event) => {
-    return event['pathParameters'][0];
+    return event['queryStringParameters']["medication_id"];
 }
 
 const GetQueryParams = (user_id) => {
