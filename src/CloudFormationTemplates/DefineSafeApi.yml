@@ -190,7 +190,7 @@ Resources:
         - StatusCode: 200
           ResponseParameters:
             method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-            method.response.header.Access-Control-Allow-Methods: "'GET,POST,PUT,OPTIONS'" #This list must include all calls being made to this resource
+            method.response.header.Access-Control-Allow-Methods: "'GET,POST,PUT,DELETE,OPTIONS'" #This list must include all calls being made to this resource
             method.response.header.Access-Control-Allow-Origin: "'*'"
           ResponseTemplates:
             application/json: ''
@@ -649,7 +649,7 @@ Resources:
     Properties:
       AuthorizationType: CUSTOM
       AuthorizerId: !Ref Authorizer
-      HttpMethod: POST
+      HttpMethod: DELETE
       Integration:
         Type: AWS_PROXY
         IntegrationHttpMethod: POST
