@@ -29,6 +29,7 @@ Resources:
       - AddMedicationMethod
       - GetAllPlansMethod
       - GetMedicationsMethod
+      - RemoveMedicationMethod
     Properties:
       RestApiId:
         Ref: DefineSafeApi
@@ -623,6 +624,51 @@ Resources:
         - StatusCode: 200
           ResponseModels:
             application/json: MedicationModel
+# RemoveMedication
+  RemoveMedicationPermissions:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:invokeFunction'
+      FunctionName: 'arn:aws:lambda:us-east-1:042537148068:function:RemoveMedication'
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        'Fn::Join':
+          - ''
+          - - 'arn:aws:execute-api:'
+            - Ref: 'AWS::Region'
+            - ':'
+            - Ref: 'AWS::AccountId'
+            - ':'
+            - Ref: DefineSafeApi
+            - /*
+  RemoveMedicationMethod:
+    DependsOn: 
+      - RemoveMedicationPermissions
+      - MedicationResource
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref Authorizer
+      HttpMethod: POST
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri:
+          'Fn::Join':
+            - ''
+            - - 'arn:aws:apigateway:'
+              - Ref: 'AWS::Region'
+              - ':lambda:path/2015-03-31/functions/'
+              - 'arn:aws:lambda:us-east-1:042537148068:function:RemoveMedication'
+              - /invocations
+        IntegrationResponses:
+          - StatusCode: 200
+      ResourceId:
+        Ref: MedicationResource
+      RestApiId:
+        Ref: DefineSafeApi
+      MethodResponses:
+        - StatusCode: 200
 # GetAllPlans
   GetAllPlansPermissions:
     Type: 'AWS::Lambda::Permission'
