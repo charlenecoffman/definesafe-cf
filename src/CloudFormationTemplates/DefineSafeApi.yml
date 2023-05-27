@@ -238,193 +238,6 @@ Resources:
             method.response.header.Access-Control-Allow-Headers: false
             method.response.header.Access-Control-Allow-Methods: false
             method.response.header.Access-Control-Allow-Origin: false
-# Models
-  PlanModel:
-    Type: 'AWS::ApiGateway::Model'
-    Properties:
-      RestApiId: !Ref DefineSafeApi
-      ContentType: application/json
-      Description: Plan request model
-      Name: PlanModel
-      Schema:
-        $schema: 'http://json-schema.org/draft-04/schema#'
-        title: PlanModel
-        type: object
-        properties:
-          plan_id:
-            type: string
-          user_id:
-            type: string
-          triggers:
-            type: string
-          coping_skills:
-            type: string
-  CreatePlanRequestModel:
-    Type: 'AWS::ApiGateway::Model'
-    Properties:
-      RestApiId: !Ref DefineSafeApi
-      ContentType: application/json
-      Description: Create Plan request model
-      Name: CreatePlanRequestModel
-      Schema:
-        $schema: 'http://json-schema.org/draft-04/schema#'
-        title: CreatePlanRequestModel
-        type: object
-        properties:
-          triggers:
-            type: string
-          coping_skills:
-            type: string
-  UpdatePlanRequestModel:
-    Type: 'AWS::ApiGateway::Model'
-    Properties:
-      RestApiId: !Ref DefineSafeApi
-      ContentType: application/json
-      Description: Update Plan request model
-      Name: UpdatePlanRequestModel
-      Schema:
-        $schema: 'http://json-schema.org/draft-04/schema#'
-        title: UpdatePlanRequestModel
-        type: object
-        properties:
-          triggers:
-            type: string
-          coping_skills:
-            type: string
-  GetPlansResponseModel:
-    Type: 'AWS::ApiGateway::Model'
-    Properties:
-      RestApiId: !Ref DefineSafeApi
-      ContentType: application/json
-      Description: Model returned when calling to get all plans
-      Name: GetPlansResponseModel
-      Schema:
-        $schema: 'http://json-schema.org/draft-04/schema#'
-        title: GetPlansResponseModel
-        type: object
-        properties:
-          plans:
-            type: array
-            items:
-              type: object
-              properties:
-                plan_id:
-                  type: string
-                user_id:
-                  type: string
-                triggers:
-                  type: string
-                coping_skills:
-                  type: string
-  AddMedicationRequestModel:
-    Type: 'AWS::ApiGateway::Model'
-    Properties:
-      RestApiId: !Ref DefineSafeApi
-      ContentType: application/json
-      Description: Add Medication request model
-      Name: AddMedicationRequestModel
-      Schema:
-        $schema: 'http://json-schema.org/draft-04/schema#'
-        title: AddMedicationRequestModel
-        type: object
-        properties:
-          medication_name:
-            type: string
-          dosage_quantity:
-            type: [integer, 'null']
-          dosage_unit:
-            type: [string, 'null']
-          times_per:
-            type: [integer, 'null']
-          times_per_unit:
-            type: [string, 'null']
-          time_taken:
-            type: [string, 'null']
-          date_started:
-            type: [string, 'null']
-          intended_use:
-            type: [string, 'null']
-          date_stopped:
-            type: [string, 'null']
-          reason_for_stop:
-            type: [string, 'null']
-  MedicationModel:
-    Type: 'AWS::ApiGateway::Model'
-    Properties:
-      RestApiId: !Ref DefineSafeApi
-      ContentType: application/json
-      Description: Medication model
-      Name: MedicationModel
-      Schema:
-        $schema: 'http://json-schema.org/draft-04/schema#'
-        title: MedicationModel
-        type: object
-        properties:
-          medication_id:
-            type: string
-          user_id:
-            type: string
-          medication_name:
-            type: string
-          dosage_quantity:
-            type: [integer, 'null']
-          dosage_unit:
-            type: [string, 'null']
-          times_per:
-            type: [integer, 'null']
-          times_per_unit:
-            type: [string, 'null']
-          time_taken:
-            type: [string, 'null']
-          date_started:
-            type: [string, 'null']
-          intended_use:
-            type: [string, 'null']
-          date_stopped:
-            type: [string, 'null']
-          reason_for_stop:
-            type: [string, 'null']
-  GetMedicationsResponseModel:
-    Type: 'AWS::ApiGateway::Model'
-    Properties:
-      RestApiId: !Ref DefineSafeApi
-      ContentType: application/json
-      Description: Model returned when calling to get all meds for a user
-      Name: GetMedicationsResponseModel
-      Schema:
-        $schema: 'http://json-schema.org/draft-04/schema#'
-        title: GetMedicationsResponseModel
-        type: object
-        properties:
-          medications:
-            type: array
-            items:
-              type: object
-              properties:
-                medication_id:
-                  type: string
-                user_id:
-                  type: string
-                medication_name:
-                  type: string
-                dosage_quantity:
-                  type: [integer, 'null']
-                dosage_unit:
-                  type: [string, 'null']
-                times_per:
-                  type: [integer, 'null']
-                times_per_unit:
-                  type: [string, 'null']
-                time_taken:
-                  type: [string, 'null']
-                date_started:
-                  type: [string, 'null']
-                intended_use:
-                  type: [string, 'null']
-                date_stopped:
-                  type: [string, 'null']
-                reason_for_stop:
-                  type: [string, 'null']
 # Methods below here include a lambda permission and a method definition
 # GetPlanByUserId
   GetPlanPermissions:
@@ -447,7 +260,6 @@ Resources:
     DependsOn: 
       - GetPlanPermissions
       - PlanResource
-      - PlanModel
     Type: 'AWS::ApiGateway::Method'
     Properties:
       AuthorizationType: CUSTOM
@@ -470,8 +282,6 @@ Resources:
         Ref: DefineSafeApi
       MethodResponses:
         - StatusCode: 200
-          ResponseModels:
-            application/json: PlanModel
 # UpdatePlanById
   UpdatePlanPermissions:
     Type: 'AWS::Lambda::Permission'
@@ -493,8 +303,6 @@ Resources:
     DependsOn: 
       - UpdatePlanPermissions
       - PlanResource
-      - UpdatePlanRequestModel
-      - PlanModel
     Type: 'AWS::ApiGateway::Method'
     Properties:
       AuthorizationType: CUSTOM
@@ -516,13 +324,9 @@ Resources:
       ResourceId:
         Ref: PlanResource
       RestApiId:
-        Ref: DefineSafeApi      
-      RequestModels:
-        application/json: UpdatePlanRequestModel
+        Ref: DefineSafeApi
       MethodResponses:
         - StatusCode: 200
-          ResponseModels:
-            application/json: PlanModel
 # CreatePlan
   CreatePlanPermissions:
     Type: 'AWS::Lambda::Permission'
@@ -544,7 +348,6 @@ Resources:
     DependsOn: 
       - CreatePlanPermissions
       - PlanResource
-      - CreatePlanRequestModel
     Type: 'AWS::ApiGateway::Method'
     Properties:
       AuthorizationType: CUSTOM
@@ -567,12 +370,8 @@ Resources:
         Ref: PlanResource
       RestApiId:
         Ref: DefineSafeApi
-      RequestModels:
-        application/json: CreatePlanRequestModel
       MethodResponses:
         - StatusCode: 200
-          ResponseModels:
-            application/json: PlanModel
 # AddMedication
   AddMedicationPermissions:
     Type: 'AWS::Lambda::Permission'
@@ -594,8 +393,6 @@ Resources:
     DependsOn: 
       - AddMedicationPermissions
       - MedicationResource
-      - AddMedicationRequestModel
-      - MedicationModel
     Type: 'AWS::ApiGateway::Method'
     Properties:
       AuthorizationType: CUSTOM
@@ -618,12 +415,8 @@ Resources:
         Ref: MedicationResource
       RestApiId:
         Ref: DefineSafeApi
-      RequestModels:
-        application/json: AddMedicationRequestModel
       MethodResponses:
         - StatusCode: 200
-          ResponseModels:
-            application/json: MedicationModel
 # RemoveMedication
   RemoveMedicationPermissions:
     Type: 'AWS::Lambda::Permission'
@@ -690,7 +483,6 @@ Resources:
     DependsOn: 
       - GetAllPlansPermissions
       - PlansResource
-      - GetPlansResponseModel
     Type: 'AWS::ApiGateway::Method'
     Properties:
       AuthorizationType: CUSTOM
@@ -715,8 +507,6 @@ Resources:
         Ref: DefineSafeApi
       MethodResponses:
         - StatusCode: 200
-          ResponseModels:
-            application/json: GetPlansResponseModel
 # GetMedications
   GetMedicationsPermissions:
     Type: 'AWS::Lambda::Permission'
@@ -738,7 +528,6 @@ Resources:
     DependsOn: 
       - GetMedicationsPermissions
       - MedicationsResource
-      - GetMedicationsResponseModel
     Type: 'AWS::ApiGateway::Method'
     Properties:
       AuthorizationType: CUSTOM
@@ -763,5 +552,3 @@ Resources:
         Ref: DefineSafeApi
       MethodResponses:
         - StatusCode: 200
-          ResponseModels:
-            application/json: GetMedicationsResponseModel
