@@ -23,10 +23,16 @@ exports.handler = async (event, context, callback) => {
         'Plan_Id':  uuid(),
         'User_Id': user_id,
         "Coping_Skills": newPlan.Coping_Skills,
-        "Triggers": newPlan.Triggers
+        "Triggers": newPlan.Triggers,
+        "Warning_Signs": newPlan.Warning_Signs,
+        "Self_Talk_Statements": newPlan.Self_Talk_Statements,
+        "Safe_Spaces": newPlan.Safe_Spaces,
+        "Contacts": newPlan.Contacts,
+        "Effective_Date": newPlan.Effective_Date,
+        "Is_Active": true
       }
     };
-    console.log("test");
+
     await documentClient.put(params)
       .promise()
       .then(() => {

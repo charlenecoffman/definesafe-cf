@@ -7,11 +7,8 @@ exports.handler = async (event, context, callback) => {
     const response = InitialResponseObject();
     const updatePlan = JSON.parse(event.body);
     const user_id = GetUserIdFromHeaders(event);
-
-    const getPlanParams = GetQueryParams(user_id);
-    const updatePlanParams = GetUpdateParams(updatePlan);
     
-    const queryData = await documentClient.query(getPlanParams).promise();
+    const queryData = await documentClient.query(GetQueryParams(user_id)).promise();
 
     if(queryData.Items[0].Plan_Id != updatePlan.Plan_Id)
     {
@@ -20,9 +17,7 @@ exports.handler = async (event, context, callback) => {
         callback(null, response)
     }
 
-    const updateResponse = await documentClient.update(updatePlanParams).promise().then(resp => console.log(resp));
-    
-    console.log(updateResponse);
+    const updateResponse = await documentClient.update(GetUpdateParams(updatePlan)).promise().then(resp => console.log(resp));
     
     response.body = JSON.stringify(updateResponse);
     callback(null, response);
@@ -48,7 +43,7 @@ const GetQueryParams = (user_id) => {
   return {
     TableName: 'Plans',
     IndexName: 'User_Id',
-    KeyConditionExpression: "User_Id = :User_Id",
+    KeyConditionExpression: "User_Id = :User_Id, Is_Active = true",
     ExpressionAttributeValues: {
         ":User_Id": user_id
     },
@@ -62,11 +57,80 @@ const GetUpdateParams = (updatePlan) => {
     Key: {
       Plan_Id: updatePlan.Plan_Id
     },
-    UpdateExpression: 'SET Triggers = :triggers, Coping_Skills = :copingSkills',
+    UpdateExpression: GetUpdateExpression(updatePlan),
     ConditionExpression: 'attribute_exists(Plan_Id)',
-    ExpressionAttributeValues: {
-      ':triggers' : updatePlan.Triggers,
-      ':copingSkills' : updatePlan.Coping_Skills,
-    }
+    ExpressionAttributeValues: GetExpressionAttributeValues(updatePlan)
   };
+}
+
+const GetExpressionAttributeValues = (updatePlan) => {
+  var expressionAttributes = {};
+
+  if(updatePlan.Triggers){
+    expressionAttributes[':triggers'] = updatePlan.Triggers;
+  }
+
+  if(updatePlan.Coping_Skills){
+    expressionAttributes[':copingSkills'] = updatePlan.Coping_Skills;
+  }
+
+  if(updatePlan.Warning_Signs){
+    expressionAttributes[':warningSigns'] = updatePlan.Warning_Signs;
+  }
+
+  if(updatePlan.Self_Talk_Statements){
+    expressionAttributes[':selfTalkStatements'] = updatePlan.Self_Talk_Statements;
+  }
+
+  if(updatePlan.Safe_Spaces){
+    expressionAttributes[':safeSpaces'] = updatePlan.Safe_Spaces;
+  }
+
+  if(updatePlan.Contacts){
+    expressionAttributes[':contacts'] = updatePlan.Contacts;
+  }
+
+  if(updatePlan.Effective_Date){
+    expressionAttributes[':effectiveDate'] = updatePlan.Effective_Date;
+  }
+
+  if(updatePlan.Is_Active != null && updatePlan.Is_Active != undefined){
+    expressionAttributes[':isActive'] = updatePlan.Is_Active;
+  }
+}
+
+const GetUpdateExpression = (updatePlan) => {
+  var updateExpression = "SET ";
+
+  if(updatePlan.Triggers){
+    updateExpression += "Triggers = :triggers, ";
+  }
+
+  if(updatePlan.Coping_Skills){
+    updateExpression += "Coping_Skills = :copingSkills, ";
+  }
+
+  if(updatePlan.Warning_Signs){
+    updateExpression += "Warning_Signs = :warningSigns, ";
+  }
+
+  if(updatePlan.Self_Talk_Statements){
+    updateExpression += "Self_Talk_Statements = :selfTalkStatements";
+  }
+
+  if(updatePlan.Safe_Spaces){
+    updateExpression += "Safe_Spaces = :safeSpaces";
+  }
+
+  if(updatePlan.Contacts){
+    updateExpression += "Contacts = :contacts";
+  }
+
+  if(updatePlan.Effective_Date){
+    updateExpression += "Effective_Date = :effectiveDate";
+  }
+
+  if(updatePlan.Is_Active != null && updatePlan.Is_Active != undefined){
+    updateExpression += "Is_Active = :isActive";
+  }
 }
