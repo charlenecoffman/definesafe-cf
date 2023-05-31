@@ -20,8 +20,7 @@ exports.handler = async (event, context, callback) => {
       IndexName: 'User_Id',
       KeyConditionExpression: "User_Id = :User_Id",
       ExpressionAttributeValues: {
-          ":User_Id": user_id,
-          ":trueValue": true
+          ":User_Id": user_id
       },
       Select: 'ALL_ATTRIBUTES'
     };
