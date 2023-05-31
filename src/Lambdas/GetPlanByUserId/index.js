@@ -18,7 +18,7 @@ exports.handler = async (event, context, callback) => {
     var params = {
       TableName: 'Plans',
       IndexName: 'User_Id',
-      KeyConditionExpression: "User_Id = :User_Id AND Is_Active = :trueValue",
+      KeyConditionExpression: "User_Id = :User_Id",
       ExpressionAttributeValues: {
           ":User_Id": user_id,
           ":trueValue": true
