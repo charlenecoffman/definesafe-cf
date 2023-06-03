@@ -43,7 +43,7 @@ const GetQueryParams = (user_id) => {
   return {
     TableName: 'Plans',
     IndexName: 'User_Id',
-    KeyConditionExpression: "User_Id = :User_Id, Is_Active = true",
+    KeyConditionExpression: "User_Id = :User_Id",
     ExpressionAttributeValues: {
         ":User_Id": user_id
     },
