@@ -17,7 +17,7 @@ exports.handler = async (event, context, callback) => {
         callback(null, response)
     }
 
-    const updateResponse = await documentClient.update(GetUpdateParams(updatePlan)).promise().then(resp => console.log(resp));
+    const updateResponse = await documentClient.update(GetUpdateParams(updatePlan)).promise();
     
     response.body = JSON.stringify(updateResponse);
     callback(null, response);
