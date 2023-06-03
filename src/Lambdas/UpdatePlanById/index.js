@@ -97,6 +97,8 @@ const GetExpressionAttributeValues = (updatePlan) => {
   if(updatePlan.Is_Active != null && updatePlan.Is_Active != undefined){
     expressionAttributes[':isActive'] = updatePlan.Is_Active;
   }
+
+  return expressionAttributes;
 }
 
 const GetUpdateExpression = (updatePlan) => {
@@ -133,4 +135,5 @@ const GetUpdateExpression = (updatePlan) => {
   if(updatePlan.Is_Active != null && updatePlan.Is_Active != undefined){
     updateExpression += "Is_Active = :isActive";
   }
+  return updateExpression;
 }
