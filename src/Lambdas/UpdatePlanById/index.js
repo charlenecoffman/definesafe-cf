@@ -117,23 +117,23 @@ const GetUpdateExpression = (updatePlan) => {
   }
 
   if(updatePlan.Self_Talk_Statements){
-    updateExpression += "Self_Talk_Statements = :selfTalkStatements";
+    updateExpression += "Self_Talk_Statements = :selfTalkStatements, ";
   }
 
   if(updatePlan.Safe_Spaces){
-    updateExpression += "Safe_Spaces = :safeSpaces";
+    updateExpression += "Safe_Spaces = :safeSpaces, ";
   }
 
   if(updatePlan.Contacts){
-    updateExpression += "Contacts = :contacts";
+    updateExpression += "Contacts = :contacts, ";
   }
 
   if(updatePlan.Effective_Date){
-    updateExpression += "Effective_Date = :effectiveDate";
+    updateExpression += "Effective_Date = :effectiveDate, ";
   }
 
   if(updatePlan.Is_Active != null && updatePlan.Is_Active != undefined){
-    updateExpression += "Is_Active = :isActive";
+    updateExpression += "Is_Active = :isActive, ";
   }
   return updateExpression;
 }
