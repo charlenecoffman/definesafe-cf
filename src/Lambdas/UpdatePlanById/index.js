@@ -133,7 +133,7 @@ const GetUpdateExpression = (updatePlan) => {
   }
 
   if(updatePlan.Is_Active != null && updatePlan.Is_Active != undefined){
-    updateExpression += "Is_Active = :isActive, ";
+    updateExpression += "Is_Active = :isActive";
   }
   return updateExpression.replace(/,\s*$/, "");
 }
