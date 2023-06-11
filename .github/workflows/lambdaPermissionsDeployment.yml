@@ -1,0 +1,110 @@
+name: PermissionsDeployment
+on:
+  workflow_run:
+    workflows: ["CFDeployments"]
+    branches: [main]
+    types: 
+      - completed
+
+jobs:
+  createMatrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{steps.jsonMatrixOutput.outputs.matrix}}
+    steps:
+      - name: Setup AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          AWS-ACCESS-KEY-ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS-SECRET-ACCESS-KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS-REGION: us-east-1
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Json Matrix Output
+        id: jsonMatrixOutput
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          matrixOutput=""
+          cd src/Permissions/Lambdas
+          for i in ./*
+          do
+            f=$(echo "${i##*/}");
+            filename=$(echo $f| cut  -d'.' -f 1);
+            policy=$(aws iam list-policies --query "Policies[?PolicyName == '${filename}Permissions']" --output json --region "us-east-1")
+            policyArn=$(echo $policy | jq -r '.[0].Arn')
+            if [ "$policyArn" == "null" ]
+            then
+              matrixOutput+="{\"lambdaName\":\"${filename}\"},";
+            else
+              fileContents=$(curl -s "https://raw.githubusercontent.com/charlenecoffman/definesafe-cf/main/src/Permissions/Lambdas/${filename}.json")
+              versionId=$(echo $policy | jq -r '.[0].DefaultVersionId')
+              policyContent=$(aws iam get-policy-version --policy-arn $policyArn --version-id $versionId --query 'PolicyVersion.Document' --output json)
+              if [ "$fileContents" != "$policyContent" ]
+              then
+                matrixOutput+="{\"lambdaName\":\"${filename}\"},";
+              fi
+            fi
+          done
+          if [[ $matrixOutput != "" ]]
+          then
+            matrixOutput="{\"include\":[${matrixOutput}]}"
+            echo "::set-output name=matrix::${matrixOutput}"
+            echo "Created matrix: '${matrixOutput}"
+          else
+            echo "Empty matrix"
+          fi
+  deployPermissions:
+    runs-on: ubuntu-latest
+    needs: createMatrix
+    if: ${{needs.createMatrix.outputs.matrix != '' && fromJson(needs.createMatrix.outputs.matrix) != '[]'}}
+    strategy:
+      matrix: ${{fromJson(needs.createMatrix.outputs.matrix)}}
+    steps:
+      - name: Setup AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          AWS-ACCESS-KEY-ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS-SECRET-ACCESS-KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS-REGION: us-east-1
+      - name: Check Policy Existance
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          policy=$(aws iam list-policies --query "Policies[?PolicyName == '${{matrix.lambdaName}}Permissions'].Arn" --output text --region "us-east-1")
+          echo "::set-env name=POLICY::$policy"
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Create Permissions If Does Not Exist
+        if: env.POLICY == ''
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          policy=$(aws iam create-policy --policy-name "${{matrix.lambdaName}}Permissions" --policy-document file://src/Permissions/Lambdas/${{matrix.lambdaName}}.json --tags Key=Solution,Value=DefineSafe)
+          echo $policy > returnObject.json
+          sleep 10s
+          aws iam attach-role-policy --role-name "AWSLambdaBasicExecutionRole-${{matrix.lambdaName}}" --policy-arn "$(jq -r '.Policy.Arn' returnObject.json)"
+      - name: Update Permissions If It Exists
+        if: env.POLICY != ''
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          versions=$(aws iam list-policy-versions --query "Versions[*].VersionId" --policy-arn ${{env.POLICY}} --output json)
+          echo $versions > versionArray.json
+          numberOfVersions=$(jq length versionArray.json)
+          if [ $numberOfVersions == "5" ]
+          then
+            oldestVersion=$(jq '.[4]' versionArray.json)
+            oldestVersion="${oldestVersion//\"/}"
+            # delete the oldest one
+             aws iam delete-policy-version --policy-arn ${{env.POLICY}} --version-id $oldestVersion
+             sleep 10s
+          fi
+          aws iam create-policy-version --policy-arn ${{env.POLICY}} --policy-document file://src/Permissions/Lambdas/${{matrix.lambdaName}}.json --set-as-default

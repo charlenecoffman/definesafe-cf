@@ -1,0 +1,25 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:PutItem",
+                "dynamodb:DescribeTable",
+                "dynamodb:DeleteItem",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:Query",
+                "dynamodb:UpdateItem",
+                "dynamodb:GetRecords"
+            ],
+            "Resource": [
+                "arn:aws:dynamodb:*:042537148068:table/Plans/stream/*",
+                "arn:aws:dynamodb:*:042537148068:table/Plans/index/*",
+                "arn:aws:dynamodb:*:042537148068:table/Plans"
+            ]
+        }
+    ]
+}

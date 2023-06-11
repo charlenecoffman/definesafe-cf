@@ -1,0 +1,89 @@
+name: LambdaDeployments
+on:
+  push:
+    branches: [main]
+
+jobs:
+  zipIfAnyChanges:
+    runs-on: ubuntu-latest
+    outputs:
+        files: ${{ steps.zipfunctions.outputs.files }}
+    steps:
+      - name: Setup AWS CLI
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          AWS-ACCESS-KEY-ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS-SECRET-ACCESS-KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS-REGION: us-east-1
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Zip up each function
+        id: zipfunctions
+        run: |
+          source ./src/BashScripts/lambda-scripts
+          source ./src/BashScripts/common-scripts
+          lambdaList=()
+          matrixOutput=""
+          zip_any_with_changes "./src/Lambdas"
+          create_matrix_output "files" "${lambdaList[@]}"
+          echo "${matrixOutput}" >> $GITHUB_OUTPUT
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Upload Zips to artifact container
+        uses: actions/upload-artifact@master
+        with:
+          name: zips
+          path: src/Lambdas/*.zip
+      - name: Upload Scripts to artifact container
+        uses: actions/upload-artifact@master
+        with:
+          name: BashScripts
+          path: src/BashScripts/*
+      - name: Upload Permissions Docs to artifact container
+        uses: actions/upload-artifact@master
+        with:
+          name: permissions
+          path: src/Permissions/RolePolicies/*.json
+  deploy:
+    runs-on: ubuntu-latest
+    needs: zipIfAnyChanges
+    if: ${{ needs.zipIfAnyChanges.outputs.files != '[]' }}
+    strategy:
+      matrix:
+        file: ${{ fromJson(needs.zipIfAnyChanges.outputs.files) }}
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: ./
+      - name: Setup AWS CLI
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          AWS-ACCESS-KEY-ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS-SECRET-ACCESS-KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS-REGION: us-east-1
+      - name: Check Function Existance
+        run: |
+          role=$(aws lambda list-functions --query 'Functions[?FunctionName == `${{ matrix.file }}`].Role' --output text --region "us-east-1")
+          echo "::set-env name=ROLE::$role"
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Create Role & Function If Doesn't Exist
+        if: env.ROLE == ''
+        run: |
+          source ./BashScripts/lambda-scripts
+          create_role_and_function ${{ matrix.file }} 'DefineSafe'
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Update Function If Exists
+        if: env.ROLE != ''
+        run: aws lambda update-function-code --function-name ${{ matrix.file }} --zip-file fileb://zips/${{ matrix.file }}.zip
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: us-east-1

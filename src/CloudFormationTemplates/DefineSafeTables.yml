@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  PlanTable:
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      AttributeDefinitions: 
+        - 
+          AttributeName: "Plan_Id"
+          AttributeType: "S"
+        - 
+          AttributeName: "User_Id"
+          AttributeType: "S"
+      KeySchema: 
+        - 
+          AttributeName: "Plan_Id"
+          KeyType: "HASH"
+      ProvisionedThroughput: 
+        ReadCapacityUnits: "1"
+        WriteCapacityUnits: "1"
+      TableName: "Plans"
+      GlobalSecondaryIndexes:
+        -
+          IndexName: "User_Id"
+          KeySchema: 
+            - 
+              AttributeName: "User_Id"
+              KeyType: "HASH"
+          Projection:
+            ProjectionType: "ALL"
+          ProvisionedThroughput: 
+            ReadCapacityUnits: "1"
+            WriteCapacityUnits: "1"
+      Tags:
+        - Key: Solution
+          Value: DefineSafe
+  MedicationTable:
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      AttributeDefinitions: 
+        - 
+          AttributeName: "Medication_Id"
+          AttributeType: "S"
+        - 
+          AttributeName: "User_Id"
+          AttributeType: "S"
+      KeySchema: 
+        - 
+          AttributeName: "Medication_Id"
+          KeyType: "HASH"
+      ProvisionedThroughput: 
+        ReadCapacityUnits: "1"
+        WriteCapacityUnits: "1"
+      TableName: "Medications"
+      GlobalSecondaryIndexes:
+        -
+          IndexName: "User_Id"
+          KeySchema: 
+            - 
+              AttributeName: "User_Id"
+              KeyType: "HASH"
+          Projection:
+            ProjectionType: "ALL"
+          ProvisionedThroughput: 
+            ReadCapacityUnits: "1"
+            WriteCapacityUnits: "1"
+      Tags:
+        - Key: Solution
+          Value: DefineSafe

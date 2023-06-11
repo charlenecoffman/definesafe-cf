@@ -1,0 +1,27 @@
+name: LambdaEnvDeployments
+on:
+  workflow_run:
+    workflows: ["LambdaDeployments"]
+    branches: [main]
+    types: 
+      - completed
+
+jobs:
+  UpdateEnvFiles:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup AWS CLI
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          AWS-ACCESS-KEY-ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS-SECRET-ACCESS-KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS-REGION: us-east-1
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Update Configs
+        run: |
+          source ./src/BashScripts/lambda-scripts
+          update_lambda_configs_if_needed "./src/EnvironmentVariables"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
